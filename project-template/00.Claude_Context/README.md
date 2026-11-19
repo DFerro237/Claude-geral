@@ -1,6 +1,6 @@
 # Using contexts
 
-This folder gathers the contexts that apply to the project. The general working rules are in `CLAUDE.md`, not here.
+This folder gathers the contexts that apply to the project. The general working rules are in `AGENTS.md` and in the global instructions file, not here.
 
 ## File types
 
@@ -30,13 +30,13 @@ Do not read the whole folder by default. The presence of a specific context does
 - **Projects for the same client:** use the project template unchanged.
 - **Projects for other clients:** remove the previous client's material:
   - their contexts in this folder;
-  - their subfolder in `02.Official_Templates`, whose templates are brand-normative and do not apply to another client.
+  - their subfolder in `02.Official_Templates`, whose templates are normative on brand and do not apply to another client.
 
-A client brand skill can remain installed when its trigger prevents it from being applied to other clients.
+A client brand skill can stay installed when its trigger prevents it from being applied to other clients.
 
 ## Contexts and skills
 
-Agent Skills, currently in `~/.claude/skills` and valid across all projects, are the canonical source for specialized procedures (spreadsheets, presentations, summaries) and are discovered automatically. That is why there are no bridge documents in this folder: contexts carry knowledge and criteria, without repeating the content of the skills.
+Agent Skills, in `~/.claude/skills` and valid in every project, are the canonical source of specialized procedures (spreadsheets, presentations, summaries) and are discovered automatically. That is why there are no bridge documents in this folder: contexts bring knowledge and criteria, without repeating the content of the skills.
 
 Contexts guide execution, but specific and current facts must be confirmed in the task's sources.
 

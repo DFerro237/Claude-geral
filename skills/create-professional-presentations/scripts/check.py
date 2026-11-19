@@ -2,7 +2,7 @@
 """
 Geometric check of a .pptx: overlapping objects and elements outside the margin.
 
-Why it exists: visual inspection of a rendered slide is expensive and unreliable. In
+Why it exists: visual inspection of a rendered slide is expensive and fails. In
 decks of 30 or 40 slides, an overlap of a few millimeters goes unnoticed in the image
 and shows up on the user's screen. This check compares the object boxes directly in
 the file, in seconds, with a precision the eye does not have.
@@ -12,7 +12,7 @@ hierarchy or slide quality. Visual inspection is still needed afterwards.
 
 Usage:
     python check.py deck.pptx
-    python check.py deck.pptx --margin 0.4 --include-images
+    python check.py deck.pptx --margem 0.4 --com-imagens
     python check.py deck.pptx --slides 3,7,12-15
 
 Output: one line per finding, plus a summary. Exit code 1 when there are findings,
@@ -44,19 +44,19 @@ except AttributeError:  # Python < 3.7
 # the card below, which is the most frequent defect. A rectangle that covers almost the
 # whole slide is a section divider background and stays out, otherwise every chapter
 # slide becomes a finding.
-KIND_TEXT = "TEXT"
-KIND_TABLE = "TABLE"
-KIND_GROUP = "GROUP"
-KIND_PICTURE = "PICTURE"
-KIND_BOX = "BOX"
+TIPO_TEXTO = "TEXT"
+TIPO_TABELA = "TABLE"
+TIPO_GRUPO = "GROUP"
+TIPO_IMAGEM = "PICTURE"
+TIPO_CAIXA = "BOX"
 
-_GROUP = 6      # MSO_SHAPE_TYPE.GROUP
-_PICTURE = 13   # MSO_SHAPE_TYPE.PICTURE
+_GRUPO = 6      # MSO_SHAPE_TYPE.GROUP
+_IMAGEM = 13    # MSO_SHAPE_TYPE.PICTURE
 _AUTO = 1       # MSO_SHAPE_TYPE.AUTO_SHAPE
-BACKGROUND_FRACTION = 0.55   # above this the shape is treated as background, not as a card
+FRACAO_FUNDO = 0.55   # above this the shape is treated as background, not as a card
 
 
-def _box(shape):
+def _caixa(shape):
     """Position and size in inches, or None when the shape does not expose them."""
     try:
         return (
@@ -69,184 +69,185 @@ def _box(shape):
         return None
 
 
-def _group_text(shape, limit=3):
-    """Text of a group's children, used only to label the finding."""
-    parts = []
-    for child in shape.shapes:
-        if getattr(child, "shape_type", None) == _GROUP:
-            parts.extend(_group_text(child, limit))
-        elif getattr(child, "has_text_frame", False):
-            t = child.text_frame.text.strip()
+def _texto_do_grupo(shape, limite=3):
+    """Text of a group's children, only to label the finding."""
+    partes = []
+    for filho in shape.shapes:
+        if getattr(filho, "shape_type", None) == _GRUPO:
+            partes.extend(_texto_do_grupo(filho, limite))
+        elif getattr(filho, "has_text_frame", False):
+            t = filho.text_frame.text.strip()
             if t:
-                parts.append(t)
-        if len(parts) >= limit:
+                partes.append(t)
+        if len(partes) >= limite:
             break
-    return " | ".join(parts[:limit])
+    return " | ".join(partes[:limite])
 
 
-def _has_fill(shape):
-    """True when the shape has a solid or gradient fill, and not just an outline."""
+def _tem_preenchimento(shape):
+    """True when the shape has a solid or gradient fill, and not only an outline."""
     try:
         return shape.fill.type in (1, 3, 4, 5)  # solid, gradient, background, pattern
     except (AttributeError, TypeError, ValueError):
         return False
 
 
-def collect(slide, include_images=False, width=13.333, height=7.5):
+def coletar(slide, com_imagens=False, largura=13.333, altura=7.5):
     """Visible objects of the slide, in slide coordinates.
 
-    A group counts as a single box. python-pptx returns the position of the children
-    in the group's internal coordinate system, which does not match the slide's when
-    the group is scaled or offset. Using the group's own box avoids comparing
+    A group counts as a single box. python-pptx returns the children's position in
+    the group's internal coordinate system, which does not match the slide's when the
+    group has scaling or an offset. Using the box of the group itself avoids comparing
     coordinates from different worlds, which is how overlaps get invented.
     """
-    slide_area = width * height
-    items = []
+    area_slide = largura * altura
+    itens = []
     for shape in slide.shapes:
-        box = _box(shape)
-        if box is None:
+        caixa = _caixa(shape)
+        if caixa is None:
             continue
-        x, y, w, h = box
-        shape_type = getattr(shape, "shape_type", None)
+        x, y, w, h = caixa
+        tipo_forma = getattr(shape, "shape_type", None)
 
-        if shape_type == _GROUP:
-            label = _group_text(shape)
-            if label:
-                items.append((x, y, w, h, KIND_GROUP, label[:42]))
+        if tipo_forma == _GRUPO:
+            rotulo = _texto_do_grupo(shape)
+            if rotulo:
+                itens.append((x, y, w, h, TIPO_GRUPO, rotulo[:42]))
         elif getattr(shape, "has_table", False):
-            items.append((x, y, w, h, KIND_TABLE, ""))
+            itens.append((x, y, w, h, TIPO_TABELA, ""))
         elif getattr(shape, "has_text_frame", False) and shape.text_frame.text.strip():
-            items.append((x, y, w, h, KIND_TEXT, shape.text_frame.text.strip()[:42]))
-        elif include_images and shape_type == _PICTURE:
-            items.append((x, y, w, h, KIND_PICTURE, getattr(shape, "name", "")[:42]))
-        elif (shape_type == _AUTO and _has_fill(shape)
-              and w * h <= slide_area * BACKGROUND_FRACTION and w > 0.12 and h > 0.12):
+            itens.append((x, y, w, h, TIPO_TEXTO, shape.text_frame.text.strip()[:42]))
+        elif com_imagens and tipo_forma == _IMAGEM:
+            itens.append((x, y, w, h, TIPO_IMAGEM, getattr(shape, "name", "")[:42]))
+        elif (tipo_forma == _AUTO and _tem_preenchimento(shape)
+              and w * h <= area_slide * FRACAO_FUNDO and w > 0.12 and h > 0.12):
             # Card with no text of its own. The minimum width and height discard rule
-            # lines and accent bars, which are decoration and do not delimit content.
-            items.append((x, y, w, h, KIND_BOX, getattr(shape, "name", "")[:42]))
-    return items
+            # lines and accent bars, which are decoration and do not bound content.
+            itens.append((x, y, w, h, TIPO_CAIXA, getattr(shape, "name", "")[:42]))
+    return itens
 
 
-def _contains(a, b, tol=0.03):
+def _contem(a, b, tol=0.03):
     """True when box `a` contains box `b`. Text inside a card is nesting, not
-    overlap, and has to be told apart from an object that crosses the border."""
+    overlap, and must be told apart from the object that crosses the edge."""
     xa, ya, wa, ha = a[:4]
     xb, yb, wb, hb = b[:4]
     return (xb >= xa - tol and yb >= ya - tol
             and xb + wb <= xa + wa + tol and yb + hb <= ya + ha + tol)
 
 
-def overlaps(items, slack, min_area):
-    """Pairs that cross each other beyond the slack. `slack` absorbs intentional contact."""
-    findings = []
-    for a in range(len(items)):
-        for b in range(a + 1, len(items)):
-            ia, ib = items[a], items[b]
-            if _contains(ia, ib) or _contains(ib, ia):
+def sobreposicoes(itens, folga, area_min):
+    """Pairs that cross each other beyond the slack. `folga` (slack) absorbs
+    deliberate touching."""
+    achados = []
+    for a in range(len(itens)):
+        for b in range(a + 1, len(itens)):
+            ia, ib = itens[a], itens[b]
+            if _contem(ia, ib) or _contem(ib, ia):
                 continue
             xa, ya, wa, ha, ta, na = ia
             xb, yb, wb, hb, tb, nb = ib
             ox = min(xa + wa, xb + wb) - max(xa, xb)
             oy = min(ya + ha, yb + hb) - max(ya, yb)
-            if ox > slack and oy > slack and ox * oy > min_area:
-                findings.append((ox * oy, ta, na, tb, nb))
-    return findings
+            if ox > folga and oy > folga and ox * oy > area_min:
+                achados.append((ox * oy, ta, na, tb, nb))
+    return achados
 
 
-def outside_margin(items, width, height, margin, tolerance):
-    findings = []
-    for x, y, w, h, kind, name in items:
-        sides = []
-        if x < margin - tolerance:
-            sides.append(f"left ({x:.2f})")
-        if y < margin - tolerance:
-            sides.append(f"top ({y:.2f})")
-        if x + w > width - margin + tolerance:
-            sides.append(f"right ({x + w:.2f} of {width:.2f})")
-        if y + h > height - margin + tolerance:
-            sides.append(f"bottom ({y + h:.2f} of {height:.2f})")
-        if sides:
-            findings.append((kind, name, ", ".join(sides)))
-    return findings
+def fora_da_margem(itens, largura, altura, margem, tolerancia):
+    achados = []
+    for x, y, w, h, tipo, nome in itens:
+        lados = []
+        if x < margem - tolerancia:
+            lados.append(f"left ({x:.2f})")
+        if y < margem - tolerancia:
+            lados.append(f"top ({y:.2f})")
+        if x + w > largura - margem + tolerancia:
+            lados.append(f"right ({x + w:.2f} of {largura:.2f})")
+        if y + h > altura - margem + tolerancia:
+            lados.append(f"bottom ({y + h:.2f} of {altura:.2f})")
+        if lados:
+            achados.append((tipo, nome, ", ".join(lados)))
+    return achados
 
 
 def _parse_slides(spec):
-    """'3,7,12-15' -> {3, 7, 12, 13, 14, 15}. None when not provided."""
+    """'3,7,12-15' -> {3, 7, 12, 13, 14, 15}. None when not given."""
     if not spec:
         return None
-    target = set()
-    for part in spec.split(","):
-        part = part.strip()
-        if "-" in part:
-            start, end = part.split("-", 1)
-            target.update(range(int(start), int(end) + 1))
-        elif part:
-            target.add(int(part))
-    return target
+    alvo = set()
+    for parte in spec.split(","):
+        parte = parte.strip()
+        if "-" in parte:
+            ini, fim = parte.split("-", 1)
+            alvo.update(range(int(ini), int(fim) + 1))
+        elif parte:
+            alvo.add(int(parte))
+    return alvo
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[1])
-    ap.add_argument("file", help="path to the .pptx")
+    ap.add_argument("arquivo", help="path to the .pptx")
     ap.add_argument(
-        "--margin",
+        "--margem",
         type=float,
         default=0.0,
-        help="required margin in inches. 0 (default) flags only what goes off the slide; "
-        "use the grid's real value to require breathing room, for example 0.4",
+        help="required margin in inches. 0 (default) flags only what leaves the slide; "
+        "use the real value of the grid to require breathing room, for example 0.4",
     )
     ap.add_argument(
-        "--slack",
+        "--folga",
         type=float,
         default=0.05,
-        help="overlap tolerated on each axis, in inches (default 0.05). Absorbs "
-        "objects placed in contact on purpose and EMU rounding",
+        help="tolerated crossing on each axis, in inches (default 0.05). Absorbs "
+        "objects touching on purpose and EMU rounding",
     )
     ap.add_argument(
-        "--min-area",
+        "--area-min",
         type=float,
         default=0.05,
-        help="minimum overlap area for a finding, in square inches (default 0.05)",
+        help="minimum crossing area to become a finding, in sq in (default 0.05)",
     )
     ap.add_argument(
-        "--include-images",
+        "--com-imagens",
         action="store_true",
         help="includes images in the comparison. Off by default because background "
         "photos and corner graphics produce findings that are not defects",
     )
-    ap.add_argument("--slides", help="restricts the check to these slides, e.g. 3,7,12-15")
+    ap.add_argument("--slides", help="restricts to slides, e.g.: 3,7,12-15")
     args = ap.parse_args()
 
-    prs = Presentation(args.file)
-    width = Emu(prs.slide_width).inches
-    height = Emu(prs.slide_height).inches
-    target = _parse_slides(args.slides)
+    prs = Presentation(args.arquivo)
+    largura = Emu(prs.slide_width).inches
+    altura = Emu(prs.slide_height).inches
+    alvo = _parse_slides(args.slides)
 
-    n_overlaps = 0
-    n_outside = 0
+    n_sobrepostos = 0
+    n_fora = 0
 
     for i, slide in enumerate(prs.slides, 1):
-        if target and i not in target:
+        if alvo and i not in alvo:
             continue
-        items = collect(slide, include_images=args.include_images,
-                        width=width, height=height)
+        itens = coletar(slide, com_imagens=args.com_imagens,
+                        largura=largura, altura=altura)
 
-        for area, ta, na, tb, nb in overlaps(items, args.slack, args.min_area):
-            n_overlaps += 1
-            print(f"slide {i:>3}  overlaps  {area:.2f} in2  [{ta}] {na!r} x [{tb}] {nb!r}")
+        for area, ta, na, tb, nb in sobreposicoes(itens, args.folga, args.area_min):
+            n_sobrepostos += 1
+            print(f"slide {i:>3}  overlaps  {area:.2f} sq in  [{ta}] {na!r} x [{tb}] {nb!r}")
 
-        for kind, name, sides in outside_margin(items, width, height, args.margin, 0.02):
-            n_outside += 1
-            print(f"slide {i:>3}  outside   [{kind}] {name!r} -> {sides}")
+        for tipo, nome, lados in fora_da_margem(itens, largura, altura, args.margem, 0.02):
+            n_fora += 1
+            print(f"slide {i:>3}  outside   [{tipo}] {nome!r} -> {lados}")
 
-    scope = f"{len(target)} slides" if target else f"{len(prs.slides)} slides"
+    escopo = f"{len(alvo)} slides" if alvo else f"{len(prs.slides)} slides"
     print(
-        f"\n{scope}, slide size {width:.2f} x {height:.2f} in, required margin "
-        f"{args.margin:.2f} in"
+        f"\n{escopo}, slide of {largura:.2f} x {altura:.2f} in, required margin "
+        f"{args.margem:.2f} in"
     )
-    print(f"overlaps: {n_overlaps}   outside margin: {n_outside}")
+    print(f"overlaps: {n_sobrepostos}   outside the margin: {n_fora}")
 
-    return 1 if (n_overlaps or n_outside) else 0
+    return 1 if (n_sobrepostos or n_fora) else 0
 
 
 if __name__ == "__main__":

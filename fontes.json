@@ -1,0 +1,122 @@
+{
+  "CLAUDE.md": {
+    "fonte": "CLAUDE.md",
+    "sha256": "f6e56f4c8c3259b3009f74de87621c3b4aaac4526a60b832aa0e2365fd70a926"
+  },
+  "agents/fact-checker.md": {
+    "fonte": "agents\\conferente-de-fatos.md",
+    "sha256": "55a6ca819e557f39d47fc5579430f3f2c8a5cd298f577067f5d9a7eef5e1ea6a"
+  },
+  "skills/analytical-documents/SKILL.md": {
+    "fonte": "skills\\analytical-documents\\SKILL.md",
+    "sha256": "5082e2a9b8ed63e736fbb763a0fd5bbd1e248148a007c37b6ba07c3be6c02cd8"
+  },
+  "skills/analytical-documents/references/docx-construction.md": {
+    "fonte": "skills\\analytical-documents\\references\\construcao-docx.md",
+    "sha256": "a0b313806d86c78d81213e605fd9c70667a5deb231972f201cf54797f4124cfb"
+  },
+  "skills/analytical-documents/scripts/doc.py": {
+    "fonte": "skills\\analytical-documents\\scripts\\doc.py",
+    "sha256": "5b06fe196aaeac74c3585ba8dcb52d9dd79bffbfe9311a1ea16d90c4ee247c1c"
+  },
+  "skills/analytical-documents/evals/evals.json": {
+    "fonte": "skills\\analytical-documents\\evals\\evals.json",
+    "sha256": "58516468a2c9e95aededbaf0b3b5d678e633bca470ced23dd30a0fd77eb40db4"
+  },
+  "skills/create-executive-summary/SKILL.md": {
+    "fonte": "skills\\create-executive-summary\\SKILL.md",
+    "sha256": "b32776775530054bea14fa28cee52ec1e16d60b3ffb05879e85e8de58ba95d84"
+  },
+  "skills/create-professional-presentations/SKILL.md": {
+    "fonte": "skills\\create-professional-presentations\\SKILL.md",
+    "sha256": "ca589d789ee4d6fb35cb4a772bea6f64f7e6c62cc5f110ccefe40beb718da21f"
+  },
+  "skills/create-professional-presentations/scripts/check.py": {
+    "fonte": "skills\\create-professional-presentations\\scripts\\checar.py",
+    "sha256": "b3d89cf528728e6247dea02469597b4808535d412c74901acc89ea843a285cc0"
+  },
+  "skills/professional-spreadsheets/SKILL.md": {
+    "fonte": "skills\\professional-spreadsheets\\SKILL.md",
+    "sha256": "03aa959d11ed40994af4a28f7467061b3c7ee29ac177c25530e6570a1c808aaa"
+  },
+  "skills/review-presentations/SKILL.md": {
+    "fonte": "skills\\review-presentations\\SKILL.md",
+    "sha256": "604abd66ebdda35d826bc8fb6599665b39d1c76a6c6ae12605ac19096ca0136d"
+  },
+  "skills/review-presentations/references/pitfalls.md": {
+    "fonte": "skills\\review-presentations\\references\\armadilhas.md",
+    "sha256": "76aa6063034205f093a9e1944ae05dbd12c0fa3017409a13b4bb1a324481f996"
+  },
+  "skills/review-presentations/references/error-log.md": {
+    "fonte": "skills\\review-presentations\\references\\planilha.md",
+    "sha256": "c6e2b572fbe8c99b775738f0ad57081ff4bdff773b81da59daff33fc99ebf7e1"
+  },
+  "skills/review-presentations/scripts/inspect_deck.py": {
+    "fonte": "skills\\review-presentations\\scripts\\inspecionar.py",
+    "sha256": "4af8723f6eb5f2e0ab1e550e33b3867084cc0cd277f2c79f1d2f9b74e1b84bbf"
+  },
+  "skills/review-presentations/scripts/error_log.py": {
+    "fonte": "skills\\review-presentations\\scripts\\planilha.py",
+    "sha256": "e18864d9149f79f7db9021af644885a762432799a4b9980f44bc9f2cfcf24cd0"
+  },
+  "skills/review-presentations/scripts/line_count.py": {
+    "fonte": "skills\\review-presentations\\scripts\\linhas.py",
+    "sha256": "392835de74db99355df4f5304071301f2ce01948e5f2ef9760894d461b7be8de"
+  },
+  "skills/review-presentations/scripts/verify.py": {
+    "fonte": "skills\\review-presentations\\scripts\\verificar.py",
+    "sha256": "9379b3009e5314ad2bce70bd0e7b7112d273182e67167af17e047e396d59ada8"
+  },
+  "skills/review-presentations/scripts/edit.py": {
+    "fonte": "skills\\review-presentations\\scripts\\editar.py",
+    "sha256": "c9670e94a7bde8a29c5ff7a5de153845ec8cd8e8385bff9884f82af6df9d2875"
+  },
+  "skills/project-status/SKILL.md": {
+    "fonte": "skills\\status-projeto\\SKILL.md",
+    "sha256": "b873297f1992d0e85348eb7db0fad2a7640697ada2e3e8445500e6dc3ee32229"
+  },
+  "skills/session-retrospective/SKILL.md": {
+    "fonte": "skills\\retroalimentacao\\SKILL.md",
+    "sha256": "bbf11fad69b98030736a53d60e9eae52df67f2cd53844ba7d19a449297e54919"
+  },
+  "skills/versions-and-folders/SKILL.md": {
+    "fonte": "skills\\versoes-e-pastas\\SKILL.md",
+    "sha256": "3af84841603904d12bae09d1dbc873fcad3301372793d228d6560b20e1096fbb"
+  },
+  "skills/versions-and-folders/scripts/versions.py": {
+    "fonte": "skills\\versoes-e-pastas\\scripts\\versoes.py",
+    "sha256": "9a0561296a36c1ed73658ae2ccfef7682fcf3100f3ae8c24f01418de221759b9"
+  },
+  "skills/versions-and-folders/evals/evals.json": {
+    "fonte": "skills\\versoes-e-pastas\\evals\\evals.json",
+    "sha256": "fba9677bc8265230215c818d8be8095bd60191e193606fe6bd98974d22b5b3ba"
+  },
+  "project-template/AGENTS.md": {
+    "fonte": "Pasta padrão\\AGENTS.md",
+    "sha256": "8625cf98223284a3debc9223789beccac76b3821822eee94227719e6d42ff7b6"
+  },
+  "project-template/CLAUDE.md": {
+    "fonte": "Pasta padrão\\CLAUDE.md",
+    "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
+  },
+  "project-template/01.Prompts_and_Routines/README.md": {
+    "fonte": "Pasta padrão\\01.Prompts_e_Rotinas\\README.md",
+    "sha256": "e8fafc0b076952ea2ef974ccee00cb0f064d1ba1c7f3df6d458201a3cc8284df"
+  },
+  "project-template/03.Style_References/README.md": {
+    "fonte": "Pasta padrão\\03.Referências_de_Padrão\\README.md",
+    "sha256": "6b6109113c1239b780ce7cfce129dc3185157e80f009836651d7756a1940072f"
+  },
+  "project-template/04.Materials_and_Sources/README.md": {
+    "fonte": "Pasta padrão\\04.Materiais_e_Fontes\\README.md",
+    "sha256": "963680d38f95fddb6b6ea5c59bfeff4747d980066e3b5fd1b8d2a515b0b22a39"
+  },
+  "project-template/05.Working_Files/README.md": {
+    "fonte": "Pasta padrão\\05.Base_de_Trabalho\\README.md",
+    "sha256": "7a186cc52b27e83cc638c775662e3190ce23dad9f17f0218e20a78b8a7ecbaf7"
+  },
+  "project-template/06.Outputs/README.md": {
+    "fonte": "Pasta padrão\\06.Outputs\\README.md",
+    "sha256": "e6dd2c30a93703c80f094d4ef8285c5bbdfe5279bf1bb28bf1787425d81e81af"
+  }
+}

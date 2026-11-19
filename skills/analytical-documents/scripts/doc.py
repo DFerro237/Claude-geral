@@ -2,35 +2,33 @@
 """
 Primitives for building an analytical document in Word with python-docx.
 
-These are primitives, not a ready-made document template. They solve the plumbing
+They are primitives, not a ready-made document template. They solve the plumbing
 that always costs time and always produces the same defects (footer repeated in
 every section, blank page before each heading, table wider than the page). The
 anatomy of the document, the order of the sections and what goes in each one remain
-the writer's decision, on every piece of work.
+the writer's decision, for each piece of work.
 
-Colors, font and geometry are parameters. For client material with its own visual
-identity, pass the values from the client's brand guidelines instead of accepting
-the defaults. The labels written into the document ("Source: ", "What this means: ")
-are parameters too, so a deliverable in another language can use its own wording.
+Colors, font and geometry are parameters. In client material with its own brand
+identity, pass the values from the brand skill instead of accepting the defaults.
 
-Usage as a library:
+Usage as a library (class and method names are in Portuguese; see the comments):
 
-    from doc import AnalyticalDocument
-    d = AnalyticalDocument(footer="Technical note  |  Internal use  |  ")
+    from doc import Documento
+    d = Documento(rodape="Technical note  |  Internal use  |  ")
     d.h1("Situation found", num=1)
     d.p("Paragraph text.")
-    d.quote("literal excerpt from the contract", source="Contract X, clause 4.2",
-            authority="signed document")
-    d.explain("In plain terms, this means that ...")
-    d.table(["Company", "Registration no."], [["Alpha Ltd.", "00-0000000"]])
-    d.table_source("Public registry lookup, 2026-01-15")
+    d.citacao("literal passage of the contract", fonte="Contract X, clause 4.2",
+              autoridade="signed document")         # quotation
+    d.explica("In plain language, this means that ...")  # what this means
+    d.tabela(["Company", "Tax ID"], [["Alpha", "00.000.000/0001-00"]])  # table
+    d.fonte_tabela("Public registry lookup, 2026-08-07")  # source line of the table
     d.save("output.docx")
 
-Usage as a verifier of an already saved .docx:
+Usage as a checker of a saved .docx:
 
-    python doc.py --verify output.docx
+    python doc.py --verificar output.docx
 
-The verifier measures tables and images against the usable width of the section they
+The checker measures tables and images against the usable width of the section they
 are in. It is the check that replaces page-by-page inspection when PDF export is not
 available, and it is worth running every time, because it is instantaneous.
 """
@@ -51,64 +49,64 @@ try:
 except AttributeError:
     pass
 
-OPEN_QUOTE = "“"
-CLOSE_QUOTE = "”"
-EMU_PER_CM = 360000
-TWIPS_PER_CM = 1440 / 2.54
+ASPA_ABRE = "“"
+ASPA_FECHA = "”"
+EMU_POR_CM = 360000
+TWIPS_POR_CM = 1440 / 2.54
 
 
-def _hex(value):
-    return RGBColor.from_string(value.lstrip("#").upper())
+def _hex(valor):
+    return RGBColor.from_string(valor.lstrip("#").upper())
 
 
 # --------------------------------------------------------------- raw XML
-# python-docx does not expose shading, paragraph borders, repeated table headers or
-# page fields. All of that is hand-written XML.
+# python-docx does not expose shading, paragraph border, repeated header or page
+# field. All of that is XML by hand.
 
-def _shade(el, color_hex):
+def _shade(el, cor_hex):
     shd = OxmlElement("w:shd")
     shd.set(qn("w:val"), "clear")
     shd.set(qn("w:color"), "auto")
-    shd.set(qn("w:fill"), color_hex.lstrip("#").upper())
+    shd.set(qn("w:fill"), cor_hex.lstrip("#").upper())
     el.append(shd)
 
 
-def shade_cell(cell, color_hex):
-    _shade(cell._tc.get_or_add_tcPr(), color_hex)
+def sombrear_celula(cell, cor_hex):
+    _shade(cell._tc.get_or_add_tcPr(), cor_hex)
 
 
-def shade_paragraph(par, color_hex):
-    _shade(par._p.get_or_add_pPr(), color_hex)
+def sombrear_paragrafo(par, cor_hex):
+    _shade(par._p.get_or_add_pPr(), cor_hex)
 
 
-def paragraph_border(par, side="left", color_hex="000000", thickness=18, spacing=8):
+def borda_paragrafo(par, lado="left", cor_hex="000000", espessura=18, espaco=8):
     pPr = par._p.get_or_add_pPr()
     pbdr = pPr.find(qn("w:pBdr"))
     if pbdr is None:
         pbdr = OxmlElement("w:pBdr")
         pPr.append(pbdr)
-    b = OxmlElement("w:" + side)
+    b = OxmlElement("w:" + lado)
     b.set(qn("w:val"), "single")
-    b.set(qn("w:sz"), str(thickness))
-    b.set(qn("w:space"), str(spacing))
-    b.set(qn("w:color"), color_hex.lstrip("#").upper())
+    b.set(qn("w:sz"), str(espessura))
+    b.set(qn("w:space"), str(espaco))
+    b.set(qn("w:color"), cor_hex.lstrip("#").upper())
     pbdr.append(b)
 
 
-def table_borders(table, color_hex="D9D9D9", thickness=4):
+def bordas_tabela(table, cor_hex="D9D9D9", espessura=4):
     borders = OxmlElement("w:tblBorders")
     for edge in ("top", "left", "bottom", "right", "insideH", "insideV"):
         e = OxmlElement("w:" + edge)
         e.set(qn("w:val"), "single")
-        e.set(qn("w:sz"), str(thickness))
+        e.set(qn("w:sz"), str(espessura))
         e.set(qn("w:space"), "0")
-        e.set(qn("w:color"), color_hex.lstrip("#").upper())
+        e.set(qn("w:color"), cor_hex.lstrip("#").upper())
         borders.append(e)
     table._tbl.tblPr.append(borders)
 
 
-def repeat_header(row):
-    """Repeats the first row at the top of every page. A long table without this
+def repetir_cabecalho(row):
+    """Repeats the first row at the top of each page. A long table without this
     forces the reader to go back to find out what each column is."""
     trPr = row._tr.get_or_add_trPr()
     el = OxmlElement("w:tblHeader")
@@ -117,44 +115,42 @@ def repeat_header(row):
 
 
 # --------------------------------------------------------------- document
-class AnalyticalDocument:
+class Documento:
     def __init__(
         self,
-        font="Calibri",
-        body_pt=10.5,
-        text_color="000000",
-        accent_color="1F3864",
-        secondary_color="2E74B5",
-        muted_color="595959",
-        band_color="F2F2F2",
-        border_color="D9D9D9",
-        footer=None,
-        margin_cm=2.2,
-        vertical_margin_cm=2.0,
-        source_label="Source: ",
+        fonte="Calibri",
+        corpo_pt=10.5,
+        cor_texto="000000",
+        cor_destaque="1F3864",
+        cor_apoio="2E74B5",
+        cor_discreta="595959",
+        cor_faixa="F2F2F2",
+        cor_borda="D9D9D9",
+        rodape=None,
+        margem_cm=2.2,
+        margem_vertical_cm=2.0,
     ):
-        self.font = font
-        self.body_pt = body_pt
-        self.text_color = _hex(text_color)
-        self.accent_color = _hex(accent_color)
-        self.secondary_color = _hex(secondary_color)
-        self.muted_color = _hex(muted_color)
-        self.accent_hex = accent_color.lstrip("#").upper()
-        self.band_hex = band_color.lstrip("#").upper()
-        self.border_hex = border_color.lstrip("#").upper()
-        self.footer = footer
-        self.margin_cm = margin_cm
-        self.vertical_margin_cm = vertical_margin_cm
-        self.source_label = source_label
+        self.fonte = fonte
+        self.corpo_pt = corpo_pt
+        self.cor_texto = _hex(cor_texto)
+        self.cor_destaque = _hex(cor_destaque)
+        self.cor_apoio = _hex(cor_apoio)
+        self.cor_discreta = _hex(cor_discreta)
+        self.hex_destaque = cor_destaque.lstrip("#").upper()
+        self.hex_faixa = cor_faixa.lstrip("#").upper()
+        self.hex_borda = cor_borda.lstrip("#").upper()
+        self.rodape = rodape
+        self.margem_cm = margem_cm
+        self.margem_vertical_cm = margem_vertical_cm
 
         d = Document()
         st = d.styles["Normal"]
-        st.font.name = font
-        st.font.size = Pt(body_pt)
-        st.font.color.rgb = self.text_color
-        # rFonts needs eastAsia as well, otherwise Word swaps the font in passages it
+        st.font.name = fonte
+        st.font.size = Pt(corpo_pt)
+        st.font.color.rgb = self.cor_texto
+        # rFonts needs eastAsia as well, otherwise Word swaps the font in text it
         # considers non-Latin, and the document comes out with two typefaces.
-        st.element.rPr.rFonts.set(qn("w:eastAsia"), font)
+        st.element.rPr.rFonts.set(qn("w:eastAsia"), fonte)
         pf = st.paragraph_format
         pf.space_after = Pt(6)
         pf.space_before = Pt(0)
@@ -162,66 +158,66 @@ class AnalyticalDocument:
 
         s = d.sections[0]
         s.page_width, s.page_height = Cm(21.0), Cm(29.7)
-        s.left_margin = s.right_margin = Cm(margin_cm)
-        s.top_margin = s.bottom_margin = Cm(vertical_margin_cm)
+        s.left_margin = s.right_margin = Cm(margem_cm)
+        s.top_margin = s.bottom_margin = Cm(margem_vertical_cm)
         self.d = d
-        self._build_footer(s, first=True)
+        self._montar_rodape(s, primeira=True)
 
     # ---- available width
-    def usable_width_cm(self, section=None):
-        """Text width of the section, in cm. Tables and images have to fit in it."""
+    def largura_util_cm(self, section=None):
+        """Text width of the section, in cm. Tables and images must fit in it."""
         s = section or self.d.sections[-1]
         return (s.page_width - s.left_margin - s.right_margin) / Cm(1)
 
     # ---- runs and blocks
-    def _run(self, par, text, size=None, bold=False, italic=False, color=None):
-        r = par.add_run(text)
-        r.font.name = self.font
-        r.font.size = Pt(size if size is not None else self.body_pt)
+    def _run(self, par, texto, size=None, bold=False, italic=False, cor=None):
+        r = par.add_run(texto)
+        r.font.name = self.fonte
+        r.font.size = Pt(size if size is not None else self.corpo_pt)
         r.font.bold = bold
         r.font.italic = italic
-        r.font.color.rgb = color if color is not None else self.text_color
-        r._element.rPr.rFonts.set(qn("w:eastAsia"), self.font)
+        r.font.color.rgb = cor if cor is not None else self.cor_texto
+        r._element.rPr.rFonts.set(qn("w:eastAsia"), self.fonte)
         return r
 
-    def h1(self, text, num=None, new_page=False):
-        """Section heading. `new_page` uses page_break_before instead of inserting a
-        break before it: an inserted break leaves an empty paragraph behind, and that
-        is how the blank page nobody can explain shows up."""
+    def h1(self, texto, num=None, nova_pagina=False):
+        """Section heading. `nova_pagina` (new page) uses page_break_before instead
+        of inserting a break before it: an inserted break leaves an empty paragraph,
+        and that is how the blank page nobody can explain shows up."""
         p = self.d.add_paragraph()
-        if new_page:
+        if nova_pagina:
             p.paragraph_format.page_break_before = True
         p.paragraph_format.space_before = Pt(20)
         p.paragraph_format.space_after = Pt(8)
         p.paragraph_format.keep_with_next = True
-        self._run(p, (f"{num}. " if num else "") + text, size=15, bold=True,
-                  color=self.accent_color)
-        paragraph_border(p, "bottom", self.accent_hex, thickness=8, spacing=4)
+        self._run(p, (f"{num}. " if num else "") + texto, size=15, bold=True,
+                  cor=self.cor_destaque)
+        borda_paragrafo(p, "bottom", self.hex_destaque, espessura=8, espaco=4)
         return p
 
-    def h2(self, text):
+    def h2(self, texto):
         p = self.d.add_paragraph()
         p.paragraph_format.space_before = Pt(13)
         p.paragraph_format.space_after = Pt(5)
         p.paragraph_format.keep_with_next = True
-        self._run(p, text, size=12, bold=True, color=self.accent_color)
+        self._run(p, texto, size=12, bold=True, cor=self.cor_destaque)
         return p
 
-    def h3(self, text):
+    def h3(self, texto):
         p = self.d.add_paragraph()
         p.paragraph_format.space_before = Pt(9)
         p.paragraph_format.space_after = Pt(3)
         p.paragraph_format.keep_with_next = True
-        self._run(p, text, size=self.body_pt, bold=True, color=self.secondary_color)
+        self._run(p, texto, size=self.corpo_pt, bold=True, cor=self.cor_apoio)
         return p
 
-    def p(self, text=None, parts=None, size=None, align=None, space_after=6):
-        """`parts` accepts a mix of str and ("text", {"bold": True}) to emphasize
-        inside the paragraph without splitting it into several."""
+    def p(self, texto=None, partes=None, size=None, align=None, space_after=6):
+        """`partes` (parts) accepts a mix of str and ("text", {"bold": True}) to
+        emphasize inside the paragraph without splitting it into several."""
         par = self.d.add_paragraph()
         par.paragraph_format.space_after = Pt(space_after)
         par.alignment = align if align is not None else WD_ALIGN_PARAGRAPH.JUSTIFY
-        for item in (parts or [text]):
+        for item in (partes or [texto]):
             if isinstance(item, str):
                 self._run(par, item, size=size)
             else:
@@ -230,12 +226,12 @@ class AnalyticalDocument:
                 self._run(par, item[0], **kw)
         return par
 
-    def bullet(self, text=None, parts=None, size=None, level=0):
+    def bullet(self, texto=None, partes=None, size=None, nivel=0):
         par = self.d.add_paragraph(style="List Bullet")
-        par.paragraph_format.left_indent = Cm(0.75 + 0.6 * level)
+        par.paragraph_format.left_indent = Cm(0.75 + 0.6 * nivel)
         par.paragraph_format.space_after = Pt(3)
         par.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        for item in (parts or [text]):
+        for item in (partes or [texto]):
             if isinstance(item, str):
                 self._run(par, item, size=size)
             else:
@@ -244,13 +240,13 @@ class AnalyticalDocument:
                 self._run(par, item[0], **kw)
         return par
 
-    def quote(self, text, source, authority=None):
-        """Literal excerpt, with its source attached right below.
+    def citacao(self, texto, fonte, autoridade=None):
+        """Literal passage (quotation), with the source attached right below.
 
-        `authority` says what that document is (signed, unsigned draft, public
-        record, working spreadsheet). Fill it in whenever the difference could change
-        the reading: a draft read as a signed contract is the kind of error that runs
-        through the whole document without being noticed.
+        `autoridade` (authority) says what that document is (signed, unsigned draft,
+        public record, working spreadsheet). Fill it in whenever the difference could
+        change the reading: a draft read as a signed contract is the kind of error
+        that runs through the whole document unnoticed.
         """
         p1 = self.d.add_paragraph()
         p1.paragraph_format.left_indent = Cm(0.5)
@@ -258,163 +254,165 @@ class AnalyticalDocument:
         p1.paragraph_format.space_after = Pt(0)
         p1.paragraph_format.keep_with_next = True
         p1.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        self._run(p1, OPEN_QUOTE + text + CLOSE_QUOTE, size=self.body_pt - 1,
-                  italic=True, color=self.muted_color)
-        paragraph_border(p1, "left", self.accent_hex)
-        shade_paragraph(p1, self.band_hex)
+        self._run(p1, ASPA_ABRE + texto + ASPA_FECHA, size=self.corpo_pt - 1,
+                  italic=True, cor=self.cor_discreta)
+        borda_paragrafo(p1, "left", self.hex_destaque)
+        sombrear_paragrafo(p1, self.hex_faixa)
 
         p2 = self.d.add_paragraph()
         p2.paragraph_format.left_indent = Cm(0.5)
         p2.paragraph_format.space_before = Pt(0)
         p2.paragraph_format.space_after = Pt(7)
-        label = f"{self.source_label}{source}"
-        if authority:
-            label += f"  [{authority}]"
-        self._run(p2, label, size=self.body_pt - 2, color=self.muted_color)
-        paragraph_border(p2, "left", self.accent_hex)
-        shade_paragraph(p2, self.band_hex)
+        rotulo = f"Source: {fonte}"
+        if autoridade:
+            rotulo += f"  [{autoridade}]"
+        self._run(p2, rotulo, size=self.corpo_pt - 2, cor=self.cor_discreta)
+        borda_paragrafo(p2, "left", self.hex_destaque)
+        sombrear_paragrafo(p2, self.hex_faixa)
         return p1, p2
 
-    def explain(self, text, label="What this means: "):
-        """Translation of the quoted excerpt into plain language. It comes right after
-        the quotation, because whoever reads the document usually has not opened the
-        contract and has no obligation to decipher the legal wording alone."""
+    def explica(self, texto, rotulo="What this means: "):
+        """Translation of the quoted passage into plain language. It comes right
+        after the quotation, because the reader of the document usually has not
+        opened the contract and has no obligation to decipher the legal drafting
+        alone."""
         par = self.d.add_paragraph()
         par.paragraph_format.left_indent = Cm(0.5)
         par.paragraph_format.space_after = Pt(10)
         par.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        self._run(par, label, bold=True, color=self.accent_color)
-        self._run(par, text)
+        self._run(par, rotulo, bold=True, cor=self.cor_destaque)
+        self._run(par, texto)
         return par
 
-    def note(self, text):
+    def nota(self, texto):
         par = self.d.add_paragraph()
         par.paragraph_format.space_after = Pt(9)
         par.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        self._run(par, text, size=self.body_pt - 2, color=self.muted_color)
+        self._run(par, texto, size=self.corpo_pt - 2, cor=self.cor_discreta)
         return par
 
-    def table(self, header, rows, widths=None, size=9, header_size=9,
-              zebra=True):
-        """Table with a colored header that repeats across pages.
+    def tabela(self, cabecalho, linhas, larguras=None, size=9, cab_size=9,
+               zebra=True):
+        """Table with a colored header repeated across pages.
 
-        `widths` in cm. When omitted, splits the usable width of the section into
-        equal parts, which guarantees the table fits. When you pass widths, check the
-        sum against `usable_width_cm()`: a table wider than the page is the Word
-        defect that most often goes unnoticed at generation time and most annoys the
-        reader.
+        `larguras` (widths) in cm. When omitted, it splits the usable width of the
+        section into equal parts, which guarantees that the table fits. When you pass
+        widths, check the sum against `largura_util_cm()`: a table wider than the
+        page is the Word defect that most often goes unnoticed in generation and
+        most bothers the reader.
 
         A cell that starts with ** comes out in bold, to highlight a total row.
         """
-        n = len(header)
-        if widths is None:
-            widths = [self.usable_width_cm() / n] * n
+        n = len(cabecalho)
+        if larguras is None:
+            larguras = [self.largura_util_cm() / n] * n
 
         t = self.d.add_table(rows=1, cols=n)
         t.alignment = WD_TABLE_ALIGNMENT.CENTER
         t.autofit = False
-        table_borders(t, self.border_hex)
+        bordas_tabela(t, self.hex_borda)
 
         hdr = t.rows[0]
-        repeat_header(hdr)
-        for i, text in enumerate(header):
+        repetir_cabecalho(hdr)
+        for i, texto in enumerate(cabecalho):
             c = hdr.cells[i]
-            c.width = Cm(widths[i])
-            shade_cell(c, self.accent_hex)
+            c.width = Cm(larguras[i])
+            sombrear_celula(c, self.hex_destaque)
             par = c.paragraphs[0]
             par.paragraph_format.space_before = Pt(2)
             par.paragraph_format.space_after = Pt(2)
-            self._run(par, text, size=header_size, bold=True,
-                      color=RGBColor(0xFF, 0xFF, 0xFF))
+            self._run(par, texto, size=cab_size, bold=True,
+                      cor=RGBColor(0xFF, 0xFF, 0xFF))
 
-        for j, values in enumerate(rows):
+        for j, linha in enumerate(linhas):
             row = t.add_row()
-            for i, text in enumerate(values):
+            for i, texto in enumerate(linha):
                 c = row.cells[i]
-                c.width = Cm(widths[i])
+                c.width = Cm(larguras[i])
                 if zebra and j % 2 == 1:
-                    shade_cell(c, self.band_hex)
+                    sombrear_celula(c, self.hex_faixa)
                 par = c.paragraphs[0]
                 par.paragraph_format.space_before = Pt(2)
                 par.paragraph_format.space_after = Pt(2)
-                text = str(text)
-                self._run(par, text.replace("**", ""), size=size,
-                          bold=text.startswith("**"))
+                texto = str(texto)
+                self._run(par, texto.replace("**", ""), size=size,
+                          bold=texto.startswith("**"))
 
         self.d.add_paragraph().paragraph_format.space_after = Pt(4)
         return t
 
-    def table_source(self, text):
-        """Source line for the table immediately before it."""
+    def fonte_tabela(self, texto):
+        """Source line of the immediately preceding table."""
         par = self.d.paragraphs[-1]
         par.paragraph_format.space_after = Pt(10)
-        self._run(par, self.source_label + text, size=self.body_pt - 2.5,
-                  color=self.muted_color)
+        self._run(par, "Source: " + texto, size=self.corpo_pt - 2.5,
+                  cor=self.cor_discreta)
         return par
 
-    def image(self, path, width_cm=None):
-        """Centered image. Without a width, it takes the usable width of the current
-        section, which is what you want for a diagram on a landscape page."""
+    def imagem(self, caminho, largura_cm=None):
+        """Centered image. With no width given, it takes the usable width of the
+        current section, which is what you want for a diagram on a landscape page."""
         par = self.d.add_paragraph()
         par.alignment = WD_ALIGN_PARAGRAPH.CENTER
         par.paragraph_format.space_after = Pt(4)
-        par.add_run().add_picture(path, width=Cm(width_cm or self.usable_width_cm()))
+        par.add_run().add_picture(caminho, width=Cm(largura_cm or self.largura_util_cm()))
         return par
 
     # ---- sections
-    def _build_footer(self, section, first=False):
-        """Only the first section builds its own footer. The following ones inherit it.
+    def _montar_rodape(self, section, primeira=False):
+        """Only the first section builds its own footer. The following ones inherit.
 
         Without is_linked_to_previous, each new section gets an empty footer and Word
-        ends up showing the text repeated or losing the page numbering.
+        ends up showing the text repeated or losing the numbering.
         """
-        if not first:
+        if not primeira:
             section.footer.is_linked_to_previous = True
             return
-        if not self.footer:
+        if not self.rodape:
             return
         p = section.footer.paragraphs[0]
         p.alignment = WD_ALIGN_PARAGRAPH.LEFT
         for r in list(p.runs):
             r._element.getparent().remove(r._element)
-        self._run(p, self.footer, size=8, color=self.muted_color)
-        self._page_field(p)
+        self._run(p, self.rodape, size=8, cor=self.cor_discreta)
+        self._campo_pagina(p)
 
-    def _page_field(self, par):
-        """PAGE field. A page number written as text stops being correct as soon as
-        the document grows by one page."""
+    def _campo_pagina(self, par):
+        """PAGE field. A number written as text stops being right as soon as the
+        document grows by one page."""
         r = par.add_run()
-        r.font.name = self.font
+        r.font.name = self.fonte
         r.font.size = Pt(8)
-        r.font.color.rgb = self.muted_color
-        begin = OxmlElement("w:fldChar")
-        begin.set(qn("w:fldCharType"), "begin")
+        r.font.color.rgb = self.cor_discreta
+        ini = OxmlElement("w:fldChar")
+        ini.set(qn("w:fldCharType"), "begin")
         instr = OxmlElement("w:instrText")
         instr.set(qn("xml:space"), "preserve")
         instr.text = " PAGE "
-        end = OxmlElement("w:fldChar")
-        end.set(qn("w:fldCharType"), "end")
-        r._r.append(begin)
+        fim = OxmlElement("w:fldChar")
+        fim.set(qn("w:fldCharType"), "end")
+        r._r.append(ini)
         r._r.append(instr)
-        r._r.append(end)
+        r._r.append(fim)
 
-    def landscape_section(self, margin_cm=1.5):
-        """Sideways page for a wide diagram. Remember to return with portrait_section()."""
+    def secao_paisagem(self, margem_cm=1.5):
+        """Landscape page for a wide diagram. Remember to return with secao_retrato()
+        (portrait section)."""
         s = self.d.add_section(WD_SECTION.NEW_PAGE)
         s.orientation = WD_ORIENT.LANDSCAPE
         s.page_width, s.page_height = Cm(29.7), Cm(21.0)
-        s.left_margin = s.right_margin = Cm(margin_cm)
-        s.top_margin = s.bottom_margin = Cm(margin_cm)
-        self._build_footer(s)
+        s.left_margin = s.right_margin = Cm(margem_cm)
+        s.top_margin = s.bottom_margin = Cm(margem_cm)
+        self._montar_rodape(s)
         return s
 
-    def portrait_section(self):
+    def secao_retrato(self):
         s = self.d.add_section(WD_SECTION.NEW_PAGE)
         s.orientation = WD_ORIENT.PORTRAIT
         s.page_width, s.page_height = Cm(21.0), Cm(29.7)
-        s.left_margin = s.right_margin = Cm(self.margin_cm)
-        s.top_margin = s.bottom_margin = Cm(self.vertical_margin_cm)
-        self._build_footer(s)
+        s.left_margin = s.right_margin = Cm(self.margem_cm)
+        s.top_margin = s.bottom_margin = Cm(self.margem_vertical_cm)
+        self._montar_rodape(s)
         return s
 
     def save(self, path):
@@ -422,71 +420,71 @@ class AnalyticalDocument:
         return path
 
 
-# --------------------------------------------------------------- verification
-def _index_by_section(doc):
-    """Maps each table and each body paragraph to the section it belongs to.
+# --------------------------------------------------------------- checking
+def _indice_por_secao(doc):
+    """Maps each table and each body paragraph to the section it is in.
 
     Word marks the end of a section with a sectPr inside its last paragraph. Walking
     the body in order and counting those markers is what makes it possible to compare
-    each object with the width of the right page, and not with that of the first one.
+    each object with the width of the right page, and not with that of the first.
     """
     idx = 0
-    mapping = []
+    mapa = []
     for child in doc.element.body.iterchildren():
         tag = child.tag.split("}")[-1]
         if tag in ("p", "tbl"):
-            mapping.append((tag, child, idx))
+            mapa.append((tag, child, idx))
             if tag == "p":
                 pPr = child.find(qn("w:pPr"))
                 if pPr is not None and pPr.find(qn("w:sectPr")) is not None:
                     idx += 1
-    return mapping
+    return mapa
 
 
-def verify(path):
+def verificar(caminho):
     """Measures tables and images against the usable width of the section they are in.
 
     It does not replace looking at the document, but it catches the defect that
     reading the extracted text never shows: the object that overflows the page.
     """
-    doc = Document(path)
-    widths = []
+    doc = Document(caminho)
+    larguras = []
     for s in doc.sections:
-        usable = (s.page_width - s.left_margin - s.right_margin) / Cm(1)
+        util = (s.page_width - s.left_margin - s.right_margin) / Cm(1)
         orient = "landscape" if s.page_width > s.page_height else "portrait"
-        widths.append(usable)
-        print(f"section {len(widths) - 1}: {orient}, usable width {usable:.2f} cm")
+        larguras.append(util)
+        print(f"section {len(larguras) - 1}: {orient}, usable width {util:.2f} cm")
 
-    problems = 0
-    n_tbl = n_img = 0
-    for tag, el, sec in _index_by_section(doc):
-        usable = widths[min(sec, len(widths) - 1)]
+    problemas = 0
+    n_tab = n_img = 0
+    for tag, el, sec in _indice_por_secao(doc):
+        util = larguras[min(sec, len(larguras) - 1)]
         if tag == "tbl":
-            n_tbl += 1
+            n_tab += 1
             grid = el.find(qn("w:tblGrid"))
             if grid is None:
                 continue
             total = sum(
                 int(c.get(qn("w:w")) or 0) for c in grid.findall(qn("w:gridCol"))
-            ) / TWIPS_PER_CM
-            if total > usable + 0.05:
-                problems += 1
-                print(f"  TABLE {n_tbl} (section {sec}): {total:.2f} cm in {usable:.2f} cm usable")
+            ) / TWIPS_POR_CM
+            if total > util + 0.05:
+                problemas += 1
+                print(f"  TABLE {n_tab} (section {sec}): {total:.2f} cm in {util:.2f} cm usable")
         else:
             for ext in el.iter(qn("wp:extent")):
                 n_img += 1
-                cm = int(ext.get("cx") or 0) / EMU_PER_CM
-                if cm > usable + 0.05:
-                    problems += 1
-                    print(f"  IMAGE {n_img} (section {sec}): {cm:.2f} cm in {usable:.2f} cm usable")
+                cm = int(ext.get("cx") or 0) / EMU_POR_CM
+                if cm > util + 0.05:
+                    problemas += 1
+                    print(f"  IMAGE {n_img} (section {sec}): {cm:.2f} cm in {util:.2f} cm usable")
 
-    print(f"\n{n_tbl} tables, {n_img} images, {len(widths)} sections")
-    print(f"objects wider than the usable width: {problems}")
-    return problems
+    print(f"\n{n_tab} tables, {n_img} images, {len(larguras)} sections")
+    print(f"objects beyond the usable width: {problemas}")
+    return problemas
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Width checker for a .docx")
-    ap.add_argument("--verify", metavar="FILE", required=True)
+    ap.add_argument("--verificar", metavar="FILE", required=True)
     args = ap.parse_args()
-    sys.exit(1 if verify(args.verify) else 0)
+    sys.exit(1 if verificar(args.verificar) else 0)

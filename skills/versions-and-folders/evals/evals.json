@@ -1,0 +1,47 @@
+{
+ "skill_name": "versions-and-folders",
+ "evals": [
+  {
+   "id": 1,
+   "name": "small-with-legacy",
+   "prompt": "Fix the spelling of 'recievable' to 'receivable' in the cash flow report in {w}/06.Outputs and save the new version.",
+   "expected_output": "Generates cash_flow_report_v1.1.md with the fix, moves v04 to old/ without asking, does not rename the legacy file and states on delivery what it replaced, small change, and what went to old.",
+   "files": []
+  },
+  {
+   "id": 2,
+   "name": "new-purpose-coexists",
+   "prompt": "Take the triage in {w}/06.Outputs and make a version for an external reviewer: remove the internal notes column and add an empty 'Reviewer comment' column. I will keep using my own triage as usual.",
+   "expected_output": "Creates a file with a new base name (purpose in the name, before the version) at v1.1, with no suffix after the version; v08 stays in place, untouched, and does not go to old.",
+   "files": []
+  },
+  {
+   "id": 3,
+   "name": "messy-project-folder",
+   "prompt": "The folder {w}/06.Outputs is a mess, organize it for me.",
+   "expected_output": "Does not move or rename anything before approval; presents a per-file triage with certain/doubt; flags as doubt the open file, the (1)/Track changes copy, the final agenda identical to v05 and the recent files; proposes a separate list of names or none; asks for approval.",
+   "files": []
+  },
+  {
+   "id": 4,
+   "name": "drive-with-cited-path",
+   "prompt": "Apply our version and old-folder pattern to the shared drive folder 'Companies under review' (fictitious folder, companies and CRM). For the test, the copy is in {w}/drive_test/Companies under review and the CRM cache is in {w}/crm_test/cache.json.",
+   "expected_output": "Does not move or rename anything; triage per subfolder with doubts (final, (1), decks per year); does not propose mass renaming; flags that the Alpha and Beta folders are cited in the company_folder field of the CRM cache; asks for approval.",
+   "files": []
+  },
+  {
+   "id": 5,
+   "name": "received-by-reference-date",
+   "prompt": "On 10/10/2026 the email from Alpha Company (fictitious) arrived with the management spreadsheet of September results. Save the file {w}/received/management_alpha_sep26.xlsx in the received folder {w}/drive_test/Management Results/Alpha, which already has 2026/Q1-26 and 2026/Q2-26.",
+   "expected_output": "Saves in 2026/Q3-26, creating the Q3-26 folder, because the reference date is September (Q3-26) and not the sending date (Q4-26); keeps the file name; does not touch Q1-26 or Q2-26; on delivery states the folder, the reference date and where it came from.",
+   "files": []
+  },
+  {
+   "id": 6,
+   "name": "received-in-folder-without-year",
+   "prompt": "Save the call notice for the annual and extraordinary shareholders' meeting of Alpha Company (fictitious) dated 10/16/2026, which is in {w}/received/Meeting notice.pdf, in the folder {w}/drive_test/Shareholders meetings - Minutes and Documents. That folder has three old loose minutes, from 2023 to 2025.",
+   "expected_output": "Creates 2026 and saves the notice there, with no quarter, because notices arrive a few times a year; does not move the three loose minutes into year folders; suggests in one sentence reorganizing the folder by year with mode B.",
+   "files": []
+  }
+ ]
+}

@@ -1,73 +1,66 @@
 ---
 name: create-professional-presentations
-description: Create, review or edit professional presentations in consulting-report style (substantial, structured text, action titles, sourced exhibits) in PowerPoint or Google Slides, for any client, with an analytical and finance focus. Trigger for any deliverable whose output is slides: corporate, strategy, committee or board decks, sales decks, results decks, industry and market analyses, valuation or investment thesis presented as slides, investment materials, one-pagers, and reviews of this kind of material, including when the request only says "slides", "deck", "presentation", "committee" or "board". It is the universal conventions layer over the built-in `pptx` skill and still applies alongside the more specific executive summary and client brand skills. When the deliverable is a spreadsheet or an Excel model, the skill is `professional-spreadsheets`.
+description: >-
+  Creates, reviews or edits a deck in the consulting-report style (action titles, structured text, exhibits with sources), with a finance bias, for any client. Use when the request says "build a deck", "make the slides", "board presentation", "one-pager" or "review the argument of this deck". A process deck that has a skill of its own (committee, report) uses both. Not for minutes nor for the fine-tooth pass on standards and typos (review-presentations).
 ---
 
 # Professional presentations (consulting style)
 
-This skill defines the editorial and reasoning standard for presentations. Tools, file generation and technical QA live in the built-in `pptx` skill. Load both: this one for *what* to say and how to structure it, `pptx` for *how to build* the `.pptx` and validate it.
+This skill sets the editorial and reasoning standard for presentations. The tools, file generation and technical QA live in the native `pptx` skill. Load both: this one for *what* to say and how to structure it, `pptx` for *how to build* the `.pptx` and validate it. The executive summary has its own layer (`create-executive-summary`), and the client's brand comes from the client's brand skill, when there is one.
 
-The target standard is the **consulting report**: slides that support a decision and stand on their own, with substantial, structured text, not a minimalist deck of loose words. Density is not a defect here; disorganization is. Each slide carries a complete argument, not just a topic.
+The target standard is the **consulting report**: slides that support a decision and work on their own, with substantial, structured text, not a minimalist deck of loose words. Density is not a defect here; disorganization is.
 
 ## Precedence
 
-The user's explicit request prevails over this skill: the number of slides, order, font, content, density and layout the user defines are to be respected. A plan drafted by the agent does not silently revoke an earlier instruction. Treat the guidance below as a repertoire of quality, not a mold.
+The user's explicit request prevails over this skill: number of slides, order, font, content, density and layout set by the user are to be respected. General precedence and versioning follow the `CLAUDE.md`.
 
 ## Prepare
 
-- Identify the audience, purpose, expected decision or understanding, central message and distribution format (live committee, board, sent by email, working document for internal reading).
-- Material for internal reading is a register of its own: nobody will present it, so density and completeness matter more than polish, and investing time in design is investing in the wrong place. What does **not** loosen is source discipline, because an internal document often becomes the basis for a decision later.
-- Consult the project's applicable context files, sources and folder READMEs, if the project has them, before writing.
-- When editing, inspect the whole deck and treat it as the main reference for language, hierarchy, typography, palette, grid and fixed elements. Use `markitdown` and the thumbnails described in the `pptx` skill to map what already exists.
-- Consult templates only when applicable; use them as a reference for form, never as a factual source.
-- Preserve the base file and generate a new version at the defined destination, unless instructed otherwise.
+- Identify the audience, purpose, expected decision or understanding, central message and form of distribution (live committee, board, sent by e-mail, working document for internal reading).
+- Material for internal reading is a register of its own: nobody will present it, so density and completeness matter more than finish. What does **not** loosen is source discipline, because an internal document often becomes the basis for a decision later.
+- When editing, inspect the whole deck and treat it as the main reference for language, hierarchy, typography, palette, grid and fixed elements. Use `scripts/slide_text.py` (text per slide) and `scripts/thumbnail.py` (thumbnail grid) from the `pptx` skill to map what already exists.
+- Check the project's applicable context files, sources and READMEs before writing.
+- Templates are a reference for form, never a factual source.
 
 ## Build the reasoning (pyramid)
 
-What separates a consulting deck from a pile of slides is logic, not aesthetics.
-
-- Formulate the **governing idea**: "By the end, [audience] should [decide/understand/do] because [central message]". The whole deck serves it.
-- Give each slide **an action title**, a sentence that states the slide's conclusion, not its subject. Prefer "Margin falls 3 pp in 2025, driven by raw material costs" over "Margin analysis". The reader should understand the story by reading only the titles, in sequence (the "horizontal storyline").
-- Within the slide, support the title with evidence grouped in a MECE way (no overlap, no gap): 2 to 4 blocks, each with a clear function (context, cause, implication, action).
-- Choose the deck's sequence to fit the case: situation → complication → question → answer; context → alternatives → recommendation → decision; or conclusion → evidence → implications → next steps.
-- Do not force a recommendation in informational material, and do not create artificial alternatives to fill space.
+- Formulate the **governing idea**: "In the end, [audience] should [decide/understand/do] because [central message]". The whole deck serves it.
+- Give each slide **an action title**, a sentence that states the slide's conclusion, not its subject. Prefer "Margin falls 3 p.p. in 2025, driven by fiber cost" to "Margin analysis". Read in sequence, the titles tell the story.
+- Inside the slide, support the title with evidence grouped in a MECE way: 2 to 4 blocks, each with a clear role (context, cause, implication, action).
+- Choose the sequence of the deck according to the case: situation → complication → question → answer; context → alternatives → recommendation → decision; or conclusion → evidence → implications → next steps.
+- Do not force a recommendation into informational material, nor create artificial alternatives to fill space.
 
 ## Write to the consulting standard
 
-- Substantial text is welcome, as long as it is structured. Prefer complete sentences and claims backed by a source or a rationale over telegraphic fragments, because the slide has to defend itself when it is sent without a presenter.
-- Each bullet or block must say something and end with the "so what?": fact plus implication, not just the data point.
-- Build a hierarchy: action title; if useful, a one-line kicker or subtitle; structured body; and always the source of the data in the footer of the slide or of the exhibit.
-- Reduce redundancy between title, subtitle and body. Repeating the same sentence at three levels is noise, not emphasis.
-- Bold only decisive numbers and terms that guide the reading; bold on everything highlights nothing.
-- Before shrinking the font to make things fit, reorganize, group or split into another slide. Body text below about 12pt usually means the slide needs to be split.
+- Prefer full sentences and source-backed statements to telegraphic fragments, because the slide must defend itself when sent without a presenter.
+- Each bullet or block ends in the "so what?": fact and implication, not just the data point.
+- Hierarchy: action title; if useful, a one-line subtitle; structured body; and always the source of the data in the footer of the slide or the exhibit. Do not repeat the same sentence in title, subtitle and body.
+- Bold only for decisive numbers and for terms that guide the reading.
+- Before shrinking the font to make it fit, reorganize, group or break into another slide. Body text below ~12 pt usually means the slide needs splitting.
 
 ## Exhibits and finance
 
-- Every relevant quantitative data point becomes an exhibit (table, chart or callout), not running text. Each exhibit has its own title that states the reading ("Revenue grows 18% a year, driven by new customers") and its source.
-- Choose the chart by the message: bars for comparison, line for trend, waterfall for bridges (revenue, margin, valuation), table for precision and sensitivity, stacked for composition. Keep charts native and clean, as described in the `pptx` skill.
-- In financial content, make currency, unit and scale explicit (for example USD thousand, USD million, %, or the equivalent in the deliverable's currency); put negatives in parentheses; keep decimal places consistent; and use labels that make the period and the base clear. Follow the typographic conventions of the deliverable's language for foreign terms: when the deliverable is not in English (a Portuguese deck, for example), set English or Latin terms in italics (*runway*, *churn*, *breakeven*, *pro rata*), keep acronyms (EBITDA, CAPEX, LTM) and proper nouns in roman, and keep in roman words already naturalized in that language's financial vocabulary, such as tranche in Portuguese. When in doubt, choose one form and repeat it throughout the deck.
-- A big-number callout (KPI) communicates more than a sentence for anchor metrics; use it with a short label below.
-- Diagrams, corporate structure charts, process flows and timelines follow a rule that charts do not have: **a single reading direction**. Choose the direction (top to bottom, or left to right) and keep every connector in it. A connector that goes back forces the reader to retrace the path, and it is the defect that most destroys the legibility of this kind of exhibit. When a relationship seems to require going back, the hierarchy is usually built the wrong way round. One box per entity, and the value of the relationship (percentage, term, volume) written on the connector itself, not floating in space.
+- Every relevant quantitative data point becomes an exhibit (table, chart or callout), not running text. Each exhibit has its own title stating the reading, and the source.
+- Choose the chart by the message: bars for comparison, line for trend, waterfall for bridges (revenue, margin, valuation), table for precision and sensitivity, stacked for composition. Keep charts native and editable.
+- In financial content, take care with explicit currency, unit and scale ($ thousand, $ mm, %); negatives in parentheses; consistent decimal places; and labels that make the period and the base clear. Follow the deck's language for typography of foreign terms: for example, a deck written in another language may set English or Latin terms in italics (*runway*, *churn*, *breakeven*, *pro rata*) while keeping acronyms (EBITDA, CAPEX, LTM) and proper names upright, and leave upright the words already naturalized in that language's financial usage. When in doubt, choose one form and repeat it across the whole deck.
+- For anchor metrics, a large-number callout (KPI) with a short label communicates more than a sentence.
+- Diagrams, corporate org charts, process flows and timelines obey a rule that charts do not have: **a single reading direction**. Choose the direction (top to bottom, or left to right) and keep all connectors in it. A connector that goes back forces the reader to retrace the path and is the defect that most destroys the legibility of this kind of exhibit. When a relationship seems to require going back, usually the hierarchy is built upside down. One box per entity, and the value of the relationship (percentage, term, volume) written on the connector itself, not floating in space.
 
 ## Design
 
-- Apply the design principles and the "avoid" list of the built-in `pptx` skill (palette with a dominant color, consistent visual motif, contrast, safe fonts, margins). They apply here. The difference is that a consulting slide accommodates more text per unit.
-- Work with a grid, clear alignments, consistent margins and an unambiguous reading sequence (usually top→bottom, left→right).
-- Standardize colors: one tone per function (text, title, rule line, card background), reused; do not introduce close variants of a color already in use. If the project has an official template, take the exact values from it.
-- One dominant exhibit or focus per slide, unless the message is a balanced comparison.
-- Cards, bands and frames only when they separate distinct dimensions, not as decoration. Avoid the AI "tells": lines under titles, accent bands or stripes, too many badges.
-- Icons and images only when they carry information. Preserve the deck's logos, footers, numbering and valid placeholders.
+From the `pptx` "Avoid" list, the finishing items apply: title in the same position across slides of the same type, uniform chart labels, contrast, text that does not overflow, no line under the title and no decorative band. What does not apply is the requirement of a visual element on every slide, the rule against text-only slides, and the "bold" palette chosen by theme: the consulting slide accommodates more text per unit, and color comes from the current deck or the brand skill. Font sizes also come from the current deck or the brand skill, not from the `pptx` typography table. Add:
 
-## Preserve editability and scope
-
-- Keep text, shapes, tables and charts editable; do not rasterize slides to fake visual consistency.
+- One tone per function (text, title, rule, card background), reused, with no variant close to a color already in use. When there is an official template, take the exact values from it.
+- One dominant exhibit or focus per slide, except when the message is a balanced comparison.
+- Cards, bands and frames only when they separate distinct dimensions, not as decoration.
+- Icons and images only with an informative function.
+- Preserve logos, footers, numbering and valid placeholders of the deck. Keep text, shapes, tables and charts editable; do not rasterize slides to fake visual compliance.
 - Change only the slides and objects in scope. Do not copy facts, dates or assumptions from templates.
 
 ## Validate
 
-- Confirm every explicit requirement (number of slides, order, composition).
-- Run the geometric check first: `python "<this skill's folder>/scripts/check.py" "path/to/deck.pptx"`. It compares the boxes of every object and flags overlaps and elements outside the margin in seconds, with a precision the eye does not have. Running it first saves the visual inspection of slides that are still going to change.
-- Run the `pptx` skill's QA: `markitdown` for content, the file validator, and conversion to images for visual inspection of every changed slide at full size (overflow, alignment, contrast, footers). Visual inspection is still necessary, because it sees what geometry does not: text overflowing inside its own box, poor contrast, confusing hierarchy.
-- Title reading test: read in sequence, the action titles tell the story on their own.
-- Standalone reading test: when sent without an oral presentation, the slide explains itself.
-- Compare with the base file and confirm there are no changes outside the scope. Remove leftovers and iterate until narrative, data and execution are consistent.
+- Confirm all explicit requirements (quantity, order, composition).
+- Run the geometric check first: `python "<this skill's folder>/scripts/check.py" "path/to/deck.pptx"`. It flags overlap and elements outside the margin in seconds, and running it first saves the visual inspection of slides that will still change. Options: `--margem` (required margin in inches), `--com-imagens` (include images), `--slides 3,7,12-15`.
+- Run the `pptx` QA: `scripts/slide_text.py` for content, `scripts/office/validate.py` for the file, and conversion to images to inspect every changed slide at full size. Visual inspection is still necessary, because it sees what geometry does not: text overflowing inside its own box, poor contrast, confusing hierarchy.
+- Title-reading and standalone-reading test: the action titles tell the story on their own, and the slide explains itself without an oral presentation.
+- Compare with the base file and confirm there are no changes outside the scope.
