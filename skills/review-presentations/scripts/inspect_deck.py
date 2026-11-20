@@ -18,6 +18,7 @@ deck's language, or do those checks by reading.
 """
 import argparse, collections, re, sys, zipfile
 import xml.etree.ElementTree as ET
+from slide_order import slide_order, relationships, hyperlink_resolves
 
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
 P = "{http://schemas.openxmlformats.org/presentationml/2006/main}"
@@ -116,21 +117,15 @@ def classificar_espacos(slide, ocorrencias):
 class Deck:
     def __init__(self, caminho):
         self.z = zipfile.ZipFile(caminho)
-        self.slides = sorted(
-            (n for n in self.z.namelist()
-             if re.fullmatch(r"ppt/slides/slide\d+\.xml", n)),
-            key=lambda s: int(re.findall(r"\d+", s)[0]),
-        )
+        # Displayed order (sldIdLst), not the file number: after reordering
+        # in PowerPoint, slide7.xml can sit in position 3.
+        self.slides = slide_order(self.z)
 
     def raiz(self, n):
         return ET.fromstring(self.z.read(self.slides[n - 1]))
 
     def rels(self, n):
-        try:
-            xml = self.z.read(f"ppt/slides/_rels/slide{n}.xml.rels")
-        except KeyError:
-            return {}
-        return {r.get("Id"): r.get("Target") for r in ET.fromstring(xml)}
+        return {k: r.get("Target") for k, r in relationships(self.z, self.slides[n - 1]).items()}
 
     def texto(self, n):
         return "".join(t.text or "" for t in self.raiz(n).iter(A + "t"))
@@ -287,7 +282,7 @@ def main():
                 continue
             rid, acao = r[7]
             destino = rels.get(rid, "")
-            estado = "OK" if rid and rid in rels else "DEAD"
+            estado = "OK" if hyperlink_resolves(d.z, d.slides[s - 1], rid, acao or "") else "DEAD"
             print(f"  [{estado:5s}] slide {s:2d} | {r[0][:44]!r} -> {destino or acao}")
     print("\n  Check that the label matches the target (Appendix I must go to the Appendix I slide).")
 
@@ -330,7 +325,7 @@ def main():
         if ca and cb:
             print(f"  COEXIST: {a!r} ({ca}x) and {b!r} ({cb}x)")
     anexo_h = re.findall(r"Anexo [IVX]+ - ", texto_total)
-    anexo_t = re.findall(r"Anexo [IVX]+ \u2013 ", texto_total)  # \u2013 = en dash
+    anexo_t = re.findall(r"Anexo [IVX]+ [\u2013\u2014] ", texto_total)  # en or em dash
     if anexo_h and anexo_t:
         print(f"  COEXIST: appendix with hyphen ({len(anexo_h)}x) and with en dash ({len(anexo_t)}x)")
 

@@ -20,6 +20,7 @@ The visual layer, the only one that catches overflow, is in line_count.py.
 """
 import argparse, re, sys, zipfile
 import xml.etree.ElementTree as ET
+from slide_order import slide_order, hyperlink_resolves
 
 A = "{http://schemas.openxmlformats.org/drawingml/2006/main}"
 P = "{http://schemas.openxmlformats.org/presentationml/2006/main}"
@@ -30,9 +31,8 @@ RE_ESPACOS = re.compile("[ \u00a0\u2007\u202f]{2,}")
 
 
 def slides(z):
-    return sorted((n for n in z.namelist()
-                   if re.fullmatch(r"ppt/slides/slide\d+\.xml", n)),
-                  key=lambda s: int(re.findall(r"\d+", s)[0]))
+    # Displayed order, not the file number (see slide_order.py)
+    return slide_order(z)
 
 
 def espacos_multiplos(z, caminho):
@@ -104,7 +104,8 @@ def main():
 
     zo, zn = zipfile.ZipFile(args.original), zipfile.ZipFile(args.corrigido)
     so, sn = slides(zo), slides(zn)
-    problemas = 0
+    # A review neither creates nor deletes slides: a different count is already a problem
+    problemas = int(len(so) != len(sn))
 
     print("=" * 78)
     print("1 | STRUCTURAL")
@@ -112,7 +113,10 @@ def main():
     print(f"  slides: {len(so)} -> {len(sn)}"
           f"{'   DIVERGES' if len(so) != len(sn) else ''}")
     print(f"  package parts: {len(zo.namelist())} -> {len(zn.namelist())}")
-    faltando = set(zo.namelist()) - set(zn.namelist())
+    # python-pptx renumbers slideN.xml in displayed order on save; slides are
+    # compared by order above, so they stay out of this check by name.
+    faltando = {n for n in set(zo.namelist()) - set(zn.namelist())
+                if not n.startswith("ppt/slides/")}
     if faltando:
         problemas += 1
         print(f"  LOST PARTS: {sorted(faltando)}")
@@ -179,6 +183,14 @@ def main():
     congelados = set()
     if args.congelado:
         congelados = {int(x) for x in args.congelado.split(",")}
+    for numero in sorted(congelados):
+        if numero < 1 or numero > min(len(so), len(sn)):
+            problemas += 1
+            print(f"  NONEXISTENT FROZEN SLIDE: {numero}")
+        elif zo.read(so[numero - 1]) != zn.read(sn[numero - 1]):
+            # Text fixes on a frozen slide are allowed (pitfalls.md):
+            # warn so it gets checked, without counting a problem.
+            print(f"  frozen slide {numero}: XML changed; check that it was only a text fix")
     movidas = 0
     for k in range(min(len(so), len(sn))):
         fo, fn = formas(zo, so[k]), formas(zn, sn[k])
@@ -207,11 +219,6 @@ def main():
     print("=" * 78)
     vivos = mortos = 0
     for i, p in enumerate(sn, 1):
-        try:
-            rels = {r.get("Id"): r.get("Target")
-                    for r in ET.fromstring(zn.read(f"ppt/slides/_rels/slide{i}.xml.rels"))}
-        except KeyError:
-            rels = {}
         for r in ET.fromstring(zn.read(p)).iter(A + "r"):
             pr = r.find(A + "rPr")
             hl = pr.find(A + "hlinkClick") if pr is not None else None
@@ -219,7 +226,7 @@ def main():
                 continue
             rid = hl.get(R + "id")
             t = "".join(x.text or "" for x in r.iter(A + "t"))
-            if not rid or rid not in rels:
+            if not hyperlink_resolves(zn, p, rid, hl.get("action", "")):
                 mortos += 1
                 problemas += 1
                 print(f"  DEAD slide {i}: {t[:44]!r} action={hl.get('action')}")

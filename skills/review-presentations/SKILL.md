@@ -58,7 +58,7 @@ The scripts live in this skill's folder, not in the project's. Call them by full
 python "<skill folder>/scripts/inspect_deck.py" "path/to/deck.pptx"
 ```
 
-It returns the full inventory: text per paragraph, font per run, italics, position, size and autofit mode of each shape, hyperlinks with the resolved target, and the automatic checks for currency, dates and spelling variants. The output comes in sections tagged with the dimension prefix, so read only those in the confirmed scope. Use `--texto` when you need the full text for the typing and grammar review, and `--slides` to limit the sweep.
+It returns the full inventory: text per paragraph, font per run, italics, position, size and autofit mode of each shape, hyperlinks with the resolved target, and the automatic checks for currency, dates and spelling variants. The output comes in sections tagged with the dimension prefix, so read only those in the confirmed scope. Use `--texto` when you need the full text for the typing and grammar review, and `--slides` to limit the sweep. The slide number, here and in the other scripts, is the position shown in PowerPoint, not the number of the internal file, which stops matching once slides are reordered.
 
 Read the output with suspicion. Before logging any finding, check `references/pitfalls.md`, which lists the false positives that have already cost rework, such as Arial that is a bullet font and not a text font, and superscript that exists as an attribute and not as a character.
 

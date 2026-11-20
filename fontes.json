@@ -41,7 +41,7 @@
   },
   "skills/review-presentations/SKILL.md": {
     "fonte": "skills\\review-presentations\\SKILL.md",
-    "sha256": "604abd66ebdda35d826bc8fb6599665b39d1c76a6c6ae12605ac19096ca0136d"
+    "sha256": "471fd427ea1d6610f68ed101ab2358bba29521f8215d54dcfbaf8d44dea1542e"
   },
   "skills/review-presentations/references/pitfalls.md": {
     "fonte": "skills\\review-presentations\\references\\armadilhas.md",
@@ -53,7 +53,7 @@
   },
   "skills/review-presentations/scripts/inspect_deck.py": {
     "fonte": "skills\\review-presentations\\scripts\\inspecionar.py",
-    "sha256": "4af8723f6eb5f2e0ab1e550e33b3867084cc0cd277f2c79f1d2f9b74e1b84bbf"
+    "sha256": "e9a8278c0aac740ebda867657ce27f56bab23c9ba74c5e8968d58d00c48d9bcf"
   },
   "skills/review-presentations/scripts/error_log.py": {
     "fonte": "skills\\review-presentations\\scripts\\planilha.py",
@@ -65,7 +65,7 @@
   },
   "skills/review-presentations/scripts/verify.py": {
     "fonte": "skills\\review-presentations\\scripts\\verificar.py",
-    "sha256": "9379b3009e5314ad2bce70bd0e7b7112d273182e67167af17e047e396d59ada8"
+    "sha256": "286e75029d0c6f30695bd62fb7eb1623fc3978c8d85741076127960ca99d6958"
   },
   "skills/review-presentations/scripts/edit.py": {
     "fonte": "skills\\review-presentations\\scripts\\editar.py",
@@ -118,5 +118,9 @@
   "project-template/06.Outputs/README.md": {
     "fonte": "Pasta padrão\\06.Outputs\\README.md",
     "sha256": "e6dd2c30a93703c80f094d4ef8285c5bbdfe5279bf1bb28bf1787425d81e81af"
+  },
+  "skills/review-presentations/scripts/slide_order.py": {
+    "fonte": "skills\\review-presentations\\scripts\\ordem_slides.py",
+    "sha256": "00aab8b0872801b2d2b8dde8391f9a5facf31fa5d9be9bbb2c62dd9165d020d9"
   }
 }
