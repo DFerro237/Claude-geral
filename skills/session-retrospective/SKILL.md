@@ -1,7 +1,7 @@
 ---
 name: session-retrospective
 description: >-
-  Closes the session with the Challenges block: finds the friction that cost time and may happen again, proposes where each lesson should live, with the text ready, applies only what was approved and records it in ~/.claude/challenges.md. Use when ending a session that had rework, a non-obvious error or a correction from the user, even without being asked, and when the user says "what were the challenges", "run the retrospective" or "record this lesson". Not for the project state (project-status) nor for building a skill from scratch (skill-creator).
+  Closes the session with the Challenges block: finds the friction that cost time and may happen again, proposes where each lesson should live, with the text ready, applies only what was approved and records it in ~/.claude/challenges.md. Use when ending a session that had rework, a non-obvious error or a correction from the user, even without being asked, and when the user says "what were the challenges", "run the retrospective", "record this lesson", "this cannot happen again" or "review the challenges log". Not for the project state (project-status) nor for building a skill from scratch (skill-creator).
 ---
 
 # Session retrospective
@@ -79,7 +79,7 @@ The decision follows the question rules in `CLAUDE.md`. If the items fit in the 
 ## After the answer
 
 - **Apply only what was approved**, item by item. Read the destination file before editing, because the user may have changed it.
-- **A change to `CLAUDE.md`** gets one line in the file's changelog.
+- **A change to `CLAUDE.md`** follows the changelog rule in its "Evolution and preservation" section: a record in the changelog file it names and the previous version saved where it says. A changed general rule also goes to the other AIs' copies, as the same section asks.
 - **A relevant change to a skill** goes through skill-creator. A small adjustment, such as a line or an example, can be made directly.
 - **Memory** follows the rules of the memory system: one fact per file and the pointer in `MEMORY.md`.
 - **Record every item presented**, approved or not, in `~/.claude/challenges.md`, with the decision. The log is what makes it possible to notice repetition next time.

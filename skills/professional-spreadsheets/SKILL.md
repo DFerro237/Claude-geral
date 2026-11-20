@@ -1,7 +1,7 @@
 ---
 name: professional-spreadsheets
 description: >-
-  Creates, updates, reviews or audits a spreadsheet or financial model (valuation, DCF, projection, cash flow, cap table, budget), preserving formulas, traceability, formatting and checks. Use when the request says "build a model", "review this spreadsheet", "do the valuation in Excel", "update the cap table" or "check the formulas". Not for spreadsheets that have an update routine of their own (see that skill) nor for slides (create-professional-presentations).
+  Creates, updates, reviews or audits a spreadsheet or financial model (valuation, DCF, projection, cash flow, cap table, budget), preserving formulas, traceability, formatting and checks. Use when the request says "build a model", "review this spreadsheet", "do the valuation in Excel", "update the cap table", "check the formulas" or "put these numbers in a spreadsheet", whenever the deliverable is an .xlsx. Works together with the native xlsx skill, which recalculates and checks for errors. Not for spreadsheets that have an update routine of their own (see that skill) nor for slides (create-professional-presentations).
 ---
 
 # Professional spreadsheets
@@ -17,7 +17,7 @@ A layer of conventions over the native `xlsx` skill, which provides the tools, r
 ## Preserve logic and references
 
 - Insert whole rows or columns inside the structure when that preserves references and adjacent blocks.
-- Do not change closed historical periods without authorization and a source.
+- Do not change closed historical periods without authorization and a source: a number already reported may be cited in material that has circulated.
 - Compare the logic of at least two equivalent periods or blocks before replicating formulas.
 - Use cell references instead of repeating values or putting magic numbers in formulas, with assumptions and inputs in identified cells.
 - Use absolute, relative and mixed references appropriately.
@@ -29,7 +29,7 @@ A layer of conventions over the native `xlsx` skill, which provides the tools, r
 ## Handle sources and inputs
 
 - Confirm currency, unit, scale, sign, period and nature of the data before filling in.
-- When there is no reliable data, leave the cell empty; use zero only when the source or the logic indicates zero.
+- When there is no reliable data, leave the cell empty; use zero only when the source or the logic indicates zero, because zero is a claim and an empty cell is a visible gap.
 - Record an external source when it is not clear and is material.
 - In material divergences, present the values, sources and implication before choosing.
 
@@ -55,7 +55,7 @@ Colors, when the workbook has no established convention. This is this skill's co
 - Check references, totals, consistency across periods, unit, scale, currency and sign.
 - Create checks in financial models, reconciliations and changes that affect relevant totals: discreet, complete, in italics and red.
 - Expect a zero result. When appropriate, use `ROUND(<check>,3)` to neutralize precision noise, without hiding divergences.
-- Do not treat missing data as a passed check.
+- Do not treat missing data as a passed check: a check that returns zero because both ends are empty has verified nothing.
 - Validate ranges, series, labels and axes of impacted charts.
 
 ## Validate

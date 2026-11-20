@@ -1,15 +1,15 @@
 {
   "CLAUDE.md": {
     "fonte": "CLAUDE.md",
-    "sha256": "f6e56f4c8c3259b3009f74de87621c3b4aaac4526a60b832aa0e2365fd70a926"
+    "sha256": "1ade193873ebe3b2c7366a16a9b0cb290d8d4cad3aece7682cab98b2a5e04630"
   },
   "agents/fact-checker.md": {
     "fonte": "agents\\conferente-de-fatos.md",
-    "sha256": "55a6ca819e557f39d47fc5579430f3f2c8a5cd298f577067f5d9a7eef5e1ea6a"
+    "sha256": "d8282d1c4de8d29e874d407dca49f9ebd36bd35c07c6764e9f31ee203cd96f81"
   },
   "skills/analytical-documents/SKILL.md": {
     "fonte": "skills\\analytical-documents\\SKILL.md",
-    "sha256": "5082e2a9b8ed63e736fbb763a0fd5bbd1e248148a007c37b6ba07c3be6c02cd8"
+    "sha256": "c112cb096b339b99bc5af81ae650d9288a67624928e8e63399e4c55f215a7710"
   },
   "skills/analytical-documents/references/docx-construction.md": {
     "fonte": "skills\\analytical-documents\\references\\construcao-docx.md",
@@ -25,11 +25,11 @@
   },
   "skills/create-executive-summary/SKILL.md": {
     "fonte": "skills\\create-executive-summary\\SKILL.md",
-    "sha256": "b32776775530054bea14fa28cee52ec1e16d60b3ffb05879e85e8de58ba95d84"
+    "sha256": "6f76afda47563a85e181a2807525732e3970c56615c50598b24cb219da1306f5"
   },
   "skills/create-professional-presentations/SKILL.md": {
     "fonte": "skills\\create-professional-presentations\\SKILL.md",
-    "sha256": "ca589d789ee4d6fb35cb4a772bea6f64f7e6c62cc5f110ccefe40beb718da21f"
+    "sha256": "24f94c1c1ef28b330be8b9c6b308fab776b192be9ff3fd79ea45630ba9225c29"
   },
   "skills/create-professional-presentations/scripts/check.py": {
     "fonte": "skills\\create-professional-presentations\\scripts\\checar.py",
@@ -37,11 +37,11 @@
   },
   "skills/professional-spreadsheets/SKILL.md": {
     "fonte": "skills\\professional-spreadsheets\\SKILL.md",
-    "sha256": "03aa959d11ed40994af4a28f7467061b3c7ee29ac177c25530e6570a1c808aaa"
+    "sha256": "4753e8c2c10550df09ce25a5b334821ac6bffddde90fef4c1c45357b245ed28c"
   },
   "skills/review-presentations/SKILL.md": {
     "fonte": "skills\\review-presentations\\SKILL.md",
-    "sha256": "471fd427ea1d6610f68ed101ab2358bba29521f8215d54dcfbaf8d44dea1542e"
+    "sha256": "1be9cc3431797fa122663307b9ab780b33a7b2c44d292e351781dfe3ca3f9cbe"
   },
   "skills/review-presentations/references/pitfalls.md": {
     "fonte": "skills\\review-presentations\\references\\armadilhas.md",
@@ -73,15 +73,15 @@
   },
   "skills/project-status/SKILL.md": {
     "fonte": "skills\\status-projeto\\SKILL.md",
-    "sha256": "b873297f1992d0e85348eb7db0fad2a7640697ada2e3e8445500e6dc3ee32229"
+    "sha256": "6db318286320815ecbccc1178aa0e50bb21ea07bc15f76ea717adb05ddb87893"
   },
   "skills/session-retrospective/SKILL.md": {
     "fonte": "skills\\retroalimentacao\\SKILL.md",
-    "sha256": "bbf11fad69b98030736a53d60e9eae52df67f2cd53844ba7d19a449297e54919"
+    "sha256": "b4dc056371d04658e7d0791740b3b72f8dc7cbca845a1d5c671a6c81babc9dc5"
   },
   "skills/versions-and-folders/SKILL.md": {
     "fonte": "skills\\versoes-e-pastas\\SKILL.md",
-    "sha256": "3af84841603904d12bae09d1dbc873fcad3301372793d228d6560b20e1096fbb"
+    "sha256": "4111c392990b2b6de957490e695dba53b3deaa1ccf65404ee1b450a35cc0cb87"
   },
   "skills/versions-and-folders/scripts/versions.py": {
     "fonte": "skills\\versoes-e-pastas\\scripts\\versoes.py",
@@ -91,36 +91,16 @@
     "fonte": "skills\\versoes-e-pastas\\evals\\evals.json",
     "sha256": "fba9677bc8265230215c818d8be8095bd60191e193606fe6bd98974d22b5b3ba"
   },
-  "project-template/AGENTS.md": {
-    "fonte": "Pasta padrão\\AGENTS.md",
-    "sha256": "8625cf98223284a3debc9223789beccac76b3821822eee94227719e6d42ff7b6"
-  },
-  "project-template/CLAUDE.md": {
-    "fonte": "Pasta padrão\\CLAUDE.md",
-    "sha256": "336cc4fbf19beaada7ccf9986414fa91851a8d7a07dfb3ccbe800a69eed0ab49"
-  },
-  "project-template/01.Prompts_and_Routines/README.md": {
-    "fonte": "Pasta padrão\\01.Prompts_e_Rotinas\\README.md",
-    "sha256": "e8fafc0b076952ea2ef974ccee00cb0f064d1ba1c7f3df6d458201a3cc8284df"
-  },
-  "project-template/03.Style_References/README.md": {
-    "fonte": "Pasta padrão\\03.Referências_de_Padrão\\README.md",
-    "sha256": "6b6109113c1239b780ce7cfce129dc3185157e80f009836651d7756a1940072f"
-  },
-  "project-template/04.Materials_and_Sources/README.md": {
-    "fonte": "Pasta padrão\\04.Materiais_e_Fontes\\README.md",
-    "sha256": "963680d38f95fddb6b6ea5c59bfeff4747d980066e3b5fd1b8d2a515b0b22a39"
-  },
-  "project-template/05.Working_Files/README.md": {
-    "fonte": "Pasta padrão\\05.Base_de_Trabalho\\README.md",
-    "sha256": "7a186cc52b27e83cc638c775662e3190ce23dad9f17f0218e20a78b8a7ecbaf7"
-  },
-  "project-template/06.Outputs/README.md": {
-    "fonte": "Pasta padrão\\06.Outputs\\README.md",
-    "sha256": "e6dd2c30a93703c80f094d4ef8285c5bbdfe5279bf1bb28bf1787425d81e81af"
-  },
   "skills/review-presentations/scripts/slide_order.py": {
     "fonte": "skills\\review-presentations\\scripts\\ordem_slides.py",
     "sha256": "00aab8b0872801b2d2b8dde8391f9a5facf31fa5d9be9bbb2c62dd9165d020d9"
+  },
+  "skills/project-structure/SKILL.md": {
+    "fonte": "skills\\estrutura-de-projeto\\SKILL.md",
+    "sha256": "bb03ac572acb02a2dd24d41390dbc9dd926b9e551d4f74a8d15c878d7e0b6833"
+  },
+  "skills/project-structure/references/readmes.md": {
+    "fonte": "skills\\estrutura-de-projeto\\references\\readmes.md",
+    "sha256": "08236f21b064474c8e4ca8d432c34d88f81171a698553e63eec0598e15d748bd"
   }
 }

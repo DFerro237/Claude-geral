@@ -1,7 +1,7 @@
 ---
 name: create-executive-summary
 description: >-
-  Creates or reviews the executive summary slide in consulting style: a self-sufficient synthesis of context, conclusions, recommendation and decision, with a finance bias. Use when the request says "make the executive summary", "executive summary of the deck", "opening slide that sums it all up" or "synthesis for the board". Loads create-professional-presentations; the brand comes from the client's brand skill, when there is one.
+  Creates or reviews the executive summary slide in consulting style: a self-sufficient synthesis of context, conclusions, recommendation and decision, with a finance bias. Use when the request says "make the executive summary", "executive summary of the deck", "opening slide that sums it all up", "synthesis for the board" or "a single slide I can send by e-mail", and whenever a new deck needs a synthesis slide. Loads create-professional-presentations; the brand comes from the client's brand skill, when there is one. Not for the whole deck (create-professional-presentations).
 ---
 
 # Executive summary

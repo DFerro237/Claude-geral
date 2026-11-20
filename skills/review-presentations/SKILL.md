@@ -1,7 +1,7 @@
 ---
 name: review-presentations
 description: >-
-  Does the fine-tooth-comb standardization pass on a finished PowerPoint deck (terms, font, italics, title and footer position, typos, grammar and links), with an error log in a spreadsheet and confirmation of every finding before changing anything. Trigger when the request says "go over it with a fine-tooth comb", "review this deck's standards", "check the formatting" or "see if everything is consistent". Not for reviewing the argument or narrative (create-professional-presentations).
+  Does the fine-tooth-comb standardization pass on a finished PowerPoint deck (terms, font, italics, title and footer position, typos, grammar and links), with an error log in a spreadsheet and confirmation of every finding before changing anything. Trigger when the request says "go over it with a fine-tooth comb", "review this deck's standards", "check the formatting", "see if everything is consistent" or "look for typos in the slides", even when the deck seems ready to send. Not for reviewing the argument or narrative (create-professional-presentations).
 ---
 
 # Presentation review
@@ -44,7 +44,7 @@ Also ask whether any slide is frozen, that is, whether some part must not be tou
 
 Before calling anything an error, define what you are comparing against.
 
-**Look for an earlier review spreadsheet in the project**, usually under materials and sources. Its "Standards" tab records the canonical forms already agreed. Treat it as established norm and do not reopen the discussion: if it says `tranche` stays in roman, do not propose italics.
+**Look for an earlier review spreadsheet in the project**, usually in `04.Materials_and_Sources` or in `06.Outputs`, where this skill saves it (name containing `Errors found`). Its "Standards" tab records the canonical forms already agreed. Treat it as established norm and do not reopen the discussion: if it says `tranche` stays in roman, do not propose italics.
 
 **Without an earlier spreadsheet, derive the standard from the deck itself.** Establish the dominant pattern, not the template's, because the current file beats the template in the project's precedence chain. Establish it **per block**: content slides and appendices often have a different grid, and that is structure, not error. The cover and section dividers almost always leave the grid by design.
 
@@ -138,7 +138,7 @@ python "<skill folder>/scripts/error_log.py" --config achados.json \
 
 The name follows the versioning standard in `CLAUDE.md`: a review redone on the same deck goes up to `_v1.2`, without overwriting the previous one.
 
-Check the output folder numbering in the project's `CLAUDE.md` before running. It is not the same in every project: where there is no templates folder, the whole numbering shifts by one, and what is `06.Outputs` in one project is `05.Outputs` in another.
+In a project with the numbered structure (`project-structure`), the spreadsheet goes to `06.Outputs`, in the cycle subfolder when there is one. A project that does not follow the structure yet may have another deliverables folder: check the project's `AGENTS.md` before running, instead of assuming the number.
 
 The script refuses repeated IDs and warns when a reason falls outside the taxonomy, so treat those warnings as your error, not as noise.
 

@@ -1,7 +1,7 @@
 ---
 name: project-status
 description: >-
-  Builds or updates the STATUS.md at the root of a project in the projects folder (goal, situation, current files, decisions, open items, next step), so that another session or AI can pick up the work without rereading everything. Use when the user says "update the status", "where did we stop", "do the handoff" or "leave a note for next time", when closing a block of work that changes the current file, a decision or an open item, and in a project that has no STATUS yet. Not for recording what was learned in the session (session-retrospective).
+  Builds or updates the STATUS.md at the root of a project in the projects folder (goal, situation, current files, decisions, open items, next step), so that another session or AI can pick up the work without rereading everything. Use when the user says "update the status", "where did we stop", "do the handoff", "leave a note for next time" or "I am going to hand this over to Codex", and also without being asked: when closing a block of work that changes the current file, a decision or an open item, before handing the work over and when opening a complex project that has no STATUS. Not for recording what was learned in the session (session-retrospective) nor for organizing the project's folders (project-structure).
 ---
 
 # Project status
@@ -10,7 +10,9 @@ description: >-
 
 ## Where it lives
 
-At the project root: `<projects folder>/<project>/STATUS.md`. One per project. A project with subprojects (such as a prospecting project with several fronts) has a single one, with a short section per subproject.
+At the project root: `~/Projects/<project>/STATUS.md`, next to the `AGENTS.md`. One per project.
+
+An area (a folder that groups several pieces of work on one theme, such as a prospecting pipeline; see `project-structure`) has its own STATUS, with a short section per front. A piece of work inside the area that became a project with its own structure has its own STATUS, and the area's STATUS only points to it, so the same state is not kept in two places.
 
 ## Template
 
@@ -23,7 +25,7 @@ Updated on YYYY-MM-DD by <Claude | Codex | Gemini | user>.
 <2 or 3 lines: what the project delivers and to whom.>
 
 ## Situation
-<In progress | Waiting for <what, from whom> | Completed on YYYY-MM-DD.>
+<In progress | Waiting for <what, from whom> | Closed on YYYY-MM-DD.>
 - **Current:** `<relative path of the file that is valid today>` (and where it is on the shared drive, if it was delivered).
 - <what matters most to know right now, in a few items>
 
@@ -45,15 +47,15 @@ Updated on YYYY-MM-DD by <Claude | Codex | Gemini | user>.
 - YYYY-MM-DD: <milestone, one line>.
 ```
 
-Sections with no content are removed instead of being left with "none". A completed project can keep only Goal, Situation (with the final files and where they were delivered), Decisions and History.
+Sections with no content are removed instead of being left with "none". A closed project can keep only Goal, Situation (with the final files and where they were delivered), Decisions and History; moving the folder to the projects archive is a step of `project-structure`.
 
 ## How to write it
 
 - **Current state, not a diary.** When updating, rewrite Situation and Open items for the present moment. What is no longer valid leaves those sections; if it was a milestone, it becomes one line in History. A STATUS that grows every session turns into a log, and nobody reads logs.
 - **Short.** Up to about 80 lines. History keeps at most about 10 milestones, most recent first. Long detail (plan, reconciliation, list of checks) lives in its own project file, and the STATUS only points to it.
 - **Detail stays in the report.** A cell, a spreadsheet row or a reconciliation account goes into the report of the round or the project plan; the Situation item says the essentials in one or two lines and points to it.
-- **Cyclical project** (quarterly round, monthly close): Situation describes the open round. When it closes, the round becomes one line in History and the remaining open items move on to the next one.
-- **Paths, not descriptions.** "Current: `06.Outputs/monthly_report_v3.16.pptx`" is worth more than "the latest version of the report". Use paths relative to the project root.
+- **Cyclical project** (quarterly round, monthly close): Situation describes the open cycle, which is the cycle subfolder inside folders 04 to 06. When it closes, the cycle becomes one line in History and the remaining open items move on to the next one.
+- **Paths, not descriptions.** "Current: `06.Outputs/2026 Q3/quarterly_report_v1.4.pptx`" is worth more than "the latest version of the report". Use paths relative to the project root.
 - **Facts with backing.** Write only what is in the files, in the project memory or was said by the user in this conversation. What you inferred gets "(inference)". What you could not find out goes to Open items as "confirm with the user: ...", instead of being filled in by a guess.
 - **Absolute dates** (YYYY-MM-DD), because "yesterday" loses its meaning in the next session.
 - **No secrets and no copying the chat.** No tokens, passwords or sensitive personal data. Summarize the decision, not the conversation.
@@ -65,7 +67,7 @@ When to update, and the care of rereading before editing, are in the `AGENTS.md`
 ## How to build it the first time
 
 1. Read the project's `AGENTS.md`, `00.Claude_Context/README.md` and, if they exist, `plan.md` and the project's Claude memory.
-2. List `06.Outputs` (or the outputs folder an older project uses) and find the highest version of each material by the vX.Y pattern, or by the exception the project's `AGENTS.md` declares (a model that feeds a report may use `_vNN`, for example); it is the candidate for current file. A file inside `old/` is not current.
+2. List `06.Outputs` (in a project with cycles, the most recent cycle's subfolder; in a project that does not follow the numbered structure yet, the deliverables folder its `AGENTS.md` names) and find the highest version of each material by the vX.Y pattern, or by the exception the project's `AGENTS.md` declares (a model that feeds a report may use `_vNN`, for example); it is the candidate for current file. A file inside `old/` or `99.Archive` is not current.
    - The name says which file is valid, not what it contains. To describe a current version, read its latest record: a `Sources` tab, a note in the file itself or the report of the round. A skill's reference sheet, an earlier STATUS and memory may be outdated, because old sheets and STATUS files repeat decisions that were already replaced.
    - If the project delivers to another one (a model that feeds a report, for example), record the link under "Linked projects".
 3. Look at the file dates to tell whether the project is stalled or active, and whether something was delivered to the shared drive.

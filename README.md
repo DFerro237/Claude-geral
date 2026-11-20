@@ -1,6 +1,6 @@
 # Claude-geral
 
-Reusable [Claude Code](https://claude.com/claude-code) skills, a subagent, a global `CLAUDE.md` and a project folder template for professional work: finance spreadsheets and models in Excel, presentations, analytical documents in Word, quality review of finished decks, and the housekeeping around them (project status, versions, session retrospectives).
+Reusable [Claude Code](https://claude.com/claude-code) skills, a subagent and a global `CLAUDE.md` for professional work: finance spreadsheets and models in Excel, presentations, analytical documents in Word, quality review of finished decks, and the housekeeping around them (project structure, project status, versions, session retrospectives).
 
 The common thread is deliverables that state their sources, declare their gaps and read on their own.
 
@@ -14,18 +14,18 @@ The common thread is deliverables that state their sources, declare their gaps a
 | [`create-executive-summary`](skills/create-executive-summary/) | skill | Executive summary slides that condense context, conclusions, recommendation and decision so they stand on their own. |
 | [`review-presentations`](skills/review-presentations/) | skill | Fine-tooth-comb review of a finished deck (typos, terms, fonts, italics, positions, links), with every finding confirmed before any change and an error log in Excel. |
 | [`analytical-documents`](skills/analytical-documents/) | skill | Memos, opinions, technical notes and due diligence reports in Word, with sourced claims, declared gaps and a checker for the `.docx`. |
+| [`project-structure`](skills/project-structure/) | skill | A numbered folder structure for complex projects (context, routines, official templates, style references, sources, working files, outputs, archive): creates a new project or imports the structure into one that grew, organizes recurring cycles, says where shared templates and client bases live, and archives finished projects. It builds the folders and their READMEs from its own text, so no template folder is needed. |
 | [`project-status`](skills/project-status/) | skill | Builds and updates a `STATUS.md` at the project root, so another session or another AI can pick up the work without rereading everything. |
 | [`versions-and-folders`](skills/versions-and-folders/) | skill | The `vX.Y` version pattern (small change, large change, new purpose, previous version to `old/`) and careful reorganization of existing folders, with a helper script. |
 | [`session-retrospective`](skills/session-retrospective/) | skill | Closes a session with a "Challenges" block: the friction that cost time, where each lesson should live, applied only after approval and logged. |
 | [`fact-checker`](agents/fact-checker.md) | subagent | Checks a finished deliverable against its sources for unsupported claims, conclusions stronger than the evidence and numbers that do not match. Changes nothing, returns findings. |
-| [`project-template`](project-template/) | folder template | A numbered folder structure for a project (context, routines, official templates, style references, sources, working files, outputs, archive), with an `AGENTS.md` shared by any AI, a `CLAUDE.md` that imports it, and a README per folder explaining what goes in and how much authority it has. |
 
 ## Installation
 
 1. Copy each folder under `skills/` into `~/.claude/skills/`, for example `~/.claude/skills/professional-spreadsheets/`.
 2. Copy `agents/fact-checker.md` into `~/.claude/agents/`.
 3. Put `CLAUDE.md` at `~/.claude/CLAUDE.md`. If you already have one, merge the sections you want instead of replacing it, and add your personal style rules where the file shows an example.
-4. For a new project, copy the contents of `project-template/` into the project folder and adapt `AGENTS.md` to the project's goal.
+4. For a new complex project, ask Claude to create it with the `project-structure` skill, which builds the folders, the READMEs, `AGENTS.md`, `CLAUDE.md` and `STATUS.md`. A simple project can stay a plain folder.
 
 Claude Code discovers skills and agents on the next session. Install only the items you need; each skill names the others it works with, and the cross-references assume the names used here.
 

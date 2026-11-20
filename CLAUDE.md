@@ -61,7 +61,7 @@ I need from you:
 
 ## Project instructions
 
-**They apply to every AI.** In each project, read the `AGENTS.md` and the `CLAUDE.md` that exist in the folder and in the folders above it. The common rules live in the project's `AGENTS.md`, which Claude, Codex, Gemini and other agents read. The project's `CLAUDE.md` starts with `@AGENTS.md` and only adds what is specific to Claude. When several AIs work on the same project, they share files, not conversations: check the current state of a file before editing it, never revert another agent's work, and split responsibility by file or folder.
+**They apply to every AI.** In each project, read the `AGENTS.md` and the `CLAUDE.md` that exist in the folder and in the folders above it. The common rules live in the project's `AGENTS.md`, which Claude, Codex, Gemini and other agents read. The project's `CLAUDE.md` starts with `@AGENTS.md` and only adds what is specific to Claude. If `~/Projects/AGENTS.md` exists, its rules also apply to every project inside `~/Projects`. When several AIs work on the same project, they share files, not conversations: check the current state of a file before editing it, never revert another agent's work, and split responsibility by file or folder.
 
 ---
 
@@ -73,6 +73,11 @@ I need from you:
 - **A destructive command requires the user's inspection.** Before deleting, overwriting, clearing a folder or changing data irreversibly, show what will be affected and wait for the OK, even when the command seems safe. A backup does not replace that authorization.
 - **Before overwriting an instruction or configuration file** (`CLAUDE.md`, `AGENTS.md`, `settings.json`, a skill), reread the file and make a dated copy; do not overwrite the backup. Before moving or deleting in bulk, check the absolute paths against the authorized area. Do not force a locked file and do not overwrite a destination because of a name collision.
 - **Do not version secrets.** `.env`, tokens and keys stay out of git. Never ask the user to paste a key into the chat, and never print a secret's value in output, logs or files.
+
+**Local projects:**
+- Projects live in `~/Projects/<project>`, in the user's home folder next to `~/.claude`, outside any synced folder (Google Drive, OneDrive, Dropbox): syncing carries drafts and intermediate versions along, fights with git and locks open files.
+- A local project needs a backup. If none is configured, tell the user.
+- A complex project (several sources, versions, several sessions or AIs, or recurring work) uses the numbered folder structure, when the user asks for it or accepts the proposal; a simple project is a folder with its files. The structure, where to keep each thing and how to archive a finished project: skill `project-structure`.
 
 ---
 
@@ -98,7 +103,7 @@ I need from you:
 ## Long tasks and context
 
 - In a multi-step task, keep a `plan.md` or checklist of what has been done.
-- **`STATUS.md` in a complex project.** In non-trivial work inside a project, build the `STATUS.md` at the project root if it does not exist, and update it when closing each block that changes the current version, a decision or a pending item. It is the first thing the next session or another AI reads, and it is the handoff when the conversation gets long and work remains. Current state, not a diary. Procedure and model in the skill `project-status`.
+- **`STATUS.md` in a complex project.** In non-trivial work inside `~/Projects/<project>`, build the `STATUS.md` at the project root if it does not exist, and update it when closing each block that changes the current version, a decision or a pending item. It is the first thing the next session or another AI reads, and it is the handoff when the conversation gets long and work remains. Current state, not a diary. Procedure and model in the skill `project-status`.
 
 ---
 

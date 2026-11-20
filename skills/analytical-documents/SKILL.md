@@ -1,7 +1,7 @@
 ---
 name: analytical-documents
 description: >-
-  Creates, reviews or updates an analytical document in Word (opinion, memo, technical note, due diligence, legal or corporate analysis), with source citations and a list of gaps. Use when the request says "write an opinion on", "write a memo", "technical note in Word", "due diligence report" or "put this in a document". Not for documents that have a format skill of their own (meeting agenda, committee minutes) nor for slides (create-professional-presentations).
+  Creates, reviews or updates an analytical document in Word (opinion, memo, technical note, due diligence, legal or corporate analysis), with source citations and a list of gaps. Use when the request says "write an opinion on", "write a memo", "technical note in Word", "due diligence report", "put this in a document" or "I need something in writing for the team to decide", even without the word Word. Works together with the native docx skill, which handles QA. Not for documents that have a format skill of their own (meeting agenda, committee minutes) nor for slides (create-professional-presentations).
 ---
 
 # Analytical documents

@@ -1,7 +1,7 @@
 ---
 name: versions-and-folders
 description: >-
-  Applies the vX.Y version pattern (small change, large change or new purpose, previous version to old) and carefully reorganizes existing folders, including on a shared drive, and picks the year and quarter folder for a received file by its reference date. Use when the user says "save a new version", "make a version for so-and-so", "organize this folder", "this folder is a mess" or "where do I save this attachment". Not for files whose naming convention the project declares separately.
+  Applies the vX.Y version pattern (small change, large change or new purpose, previous version to old), carefully reorganizes folders that already exist, including on a shared drive, and picks the period folder for a received file by its reference date. Use whenever saving a new version of a deliverable, even without an explicit request, and when the user says "save a new version", "make a version for so-and-so", "organize this folder", "this folder is a mess" or "where do I save this attachment". Not for files whose naming convention the project declares separately nor for creating or importing a project's numbered structure (project-structure).
 ---
 
 # Versions and folders
@@ -36,7 +36,7 @@ the file that looks superseded may be exactly the one someone is using.
 
 ## Classify the change
 
-| Type | Signal | Real case |
+| Type | Signal | Example |
 |---|---|---|
 | Small | Same structure, same content, same line of reasoning: corrected text, adjusted number, changed label, better supported recommendation | Report going from v1.3 to v1.4, with the same structure, corrected text and better supported recommendations |
 | Large | New structure, new scope, broad rewrite, changed method, but it replaces the previous one | Report that gained a new section and had all cases reassessed with a new criterion |
@@ -138,8 +138,11 @@ user approves the list.
 
 Before moving a **folder**, and not just a loose file, look for where its path appears:
 
-- in external systems that store paths (CRM, cards); if the project keeps a reference file listing
-  the known places where paths are cited, use it;
+- in external systems that store paths (CRM, cards). The list of a client's known places lives in
+  the client's base, in `~/Projects/<Client> Base/05.Working_Files/Paths/cited-paths.md`.
+  Read that file before moving a folder of a client that has a base. If the base exists and the file does not,
+  say that the list of external places is missing and ask the user where the path may be cited
+  before moving; do not conclude that there is no citation just because the list does not exist;
 - in the project's meeting agendas and READMEs;
 - in `CLAUDE.md` and in skills, when it is one of Claude's own folders.
 
@@ -174,6 +177,11 @@ User rule for a folder that receives files from outside on a recurring basis:
 results from monitored companies, minutes and notices, board materials, monthly reports. The reason is to
 find the file later by the period it refers to, without the folder turning into a running list.
 
+**Inside a project with the numbered structure**, what is received goes to `04.Materials_and_Sources`, and in a
+recurring project the period is the cycle subfolder, with the name the skill `project-structure`
+defines. The reference date picks the cycle in the same way (items 3 and 4 below). Items 1, 2 and 5 apply to
+folders of received files outside that structure, such as those on a shared drive and those of an area.
+
 1. **At a minimum, one folder per year:** `2026/`.
 2. **When the folder starts to fill up, year and quarter:** `2026/Q3-26/`. The signal is receiving one file
    per month or more. A notice or a shareholders' meeting minute, which arrive a few times a year, stay at year level only.
@@ -186,8 +194,8 @@ find the file later by the period it refers to, without the folder turning into 
 4. **With no identifiable reference date, use the file date**: the one in the name or in the document and,
    failing those, the date of the email that brought it. Say which date you used.
 5. **Follow the structure the folder already has.** If it already uses year and quarter, or a month subfolder for
-   a partial delivery, such as `Q1-26/Feb` in a split monthly delivery, save in the same pattern. Write the quarter
-   the way the folder already writes it; with no precedent, use `Q1-26` to `Q4-26`.
+   a partial delivery, such as `Q1-26/Feb` in a split monthly delivery, save in the same pattern. In a folder that has no quarter
+   yet, use the spelling the neighboring folders on the same drive use; with no reference, `Q1-26` to `Q4-26`.
 
 What is allowed without asking and what is not:
 

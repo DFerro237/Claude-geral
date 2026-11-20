@@ -1,7 +1,7 @@
 ---
 name: create-professional-presentations
 description: >-
-  Creates, reviews or edits a deck in the consulting-report style (action titles, structured text, exhibits with sources), with a finance bias, for any client. Use when the request says "build a deck", "make the slides", "board presentation", "one-pager" or "review the argument of this deck". A process deck that has a skill of its own (committee, report) uses both. Not for minutes nor for the fine-tooth pass on standards and typos (review-presentations).
+  Creates, reviews or edits a deck in the consulting-report style (action titles, structured text, exhibits with sources), with a finance bias, for any client. Use when the request says "build a deck", "make the slides", "board presentation", "one-pager", "review the argument of this deck" or "turn this analysis into a presentation", even without the word PowerPoint. Works together with the native pptx skill, which builds and validates the file. A process deck that has a skill of its own (committee, report) uses both. Not for minutes nor for the fine-tooth pass on standards and typos (review-presentations).
 ---
 
 # Professional presentations (consulting style)

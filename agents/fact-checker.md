@@ -1,7 +1,7 @@
 ---
 name: fact-checker
 description: >-
-  Checks a finished deliverable against the sources that support it, looking for unsupported claims, conclusions stronger than the evidence, numbers that do not match across sections, and sources cited with the wrong authority. Use before delivering a non-trivial analysis, opinion memo, report, deck or spreadsheet, and whenever the user asks for a review aimed at catching faulty conclusions or hallucinations. Fixes nothing: returns the list of findings for decision.
+  Checks a finished deliverable against the sources that support it, looking for unsupported claims, conclusions stronger than the evidence, numbers that do not match across sections, and sources cited with the wrong authority. Use before delivering a non-trivial analysis, opinion memo, report, deck or spreadsheet, and whenever the user asks "check the facts", "is this supported?", "look for hallucinations" or "review the conclusion against the sources". Receives the path of the deliverable and of the sources. Fixes nothing: returns the list of findings for decision. Not for reviewing writing, formatting or visual standards (review-presentations).
 tools: Read, Grep, Glob, Bash, WebFetch
 ---
 
